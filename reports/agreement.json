@@ -1,0 +1,605 @@
+{
+  "checked": 38,
+  "agreed": 28,
+  "agreementRate": 0.7368,
+  "activitiesWithoutMonsterData": 33,
+  "styleUndetermined": 13,
+  "rows": [
+    {
+      "activity": "Abyssal Sire",
+      "variant": "Melee",
+      "weapon": "Noxious halberd",
+      "weaponStyles": [
+        "slash",
+        "stab"
+      ],
+      "solverStyle": "stab",
+      "agree": true,
+      "defences": {
+        "stab": 20.0,
+        "slash": 30.0,
+        "crush": 25.0
+      }
+    },
+    {
+      "activity": "Adamant dragon",
+      "variant": "Melee",
+      "weapon": "Dragon hunter lance",
+      "weaponStyles": [
+        "crush",
+        "slash",
+        "stab"
+      ],
+      "solverStyle": "stab",
+      "agree": true,
+      "defences": {
+        "stab": 20.0,
+        "slash": 110.0,
+        "crush": 85.0
+      }
+    },
+    {
+      "activity": "Alchemical Hydra",
+      "variant": "Melee",
+      "weapon": "Scythe of vitur",
+      "weaponStyles": [
+        "slash"
+      ],
+      "solverStyle": "stab",
+      "agree": false,
+      "defences": {
+        "stab": 75.0,
+        "slash": 150.0,
+        "crush": 150.0
+      }
+    },
+    {
+      "activity": "Amoxliatl",
+      "variant": "Inventory",
+      "weapon": "Scythe of vitur",
+      "weaponStyles": [
+        "slash"
+      ],
+      "solverStyle": "crush",
+      "agree": false,
+      "defences": {
+        "stab": 100.0,
+        "slash": 100.0,
+        "crush": 40.0
+      }
+    },
+    {
+      "activity": "Aquanite",
+      "variant": "Melee Slash/Stab",
+      "weapon": "Ghrazi rapier",
+      "weaponStyles": [
+        "stab"
+      ],
+      "solverStyle": "stab",
+      "agree": true,
+      "defences": {
+        "stab": 60.0,
+        "slash": 80.0,
+        "crush": 80.0
+      }
+    },
+    {
+      "activity": "Araxxor",
+      "variant": "Melee",
+      "weapon": "Scythe of vitur",
+      "weaponStyles": [
+        "slash"
+      ],
+      "solverStyle": "crush",
+      "agree": false,
+      "defences": {
+        "stab": 160.0,
+        "slash": 75.0,
+        "crush": 15.0
+      }
+    },
+    {
+      "activity": "Basilisk Knight",
+      "variant": "Melee",
+      "weapon": "Inquisitor's mace",
+      "weaponStyles": [
+        "crush"
+      ],
+      "solverStyle": "crush",
+      "agree": true,
+      "defences": {
+        "stab": 30.0,
+        "slash": 30.0,
+        "crush": -15.0
+      }
+    },
+    {
+      "activity": "Calvar'ion",
+      "variant": "High-risk",
+      "weapon": "Ursine chainmace",
+      "weaponStyles": [
+        "crush",
+        "stab"
+      ],
+      "solverStyle": "crush",
+      "agree": true,
+      "defences": {
+        "stab": 130.0,
+        "slash": 128.0,
+        "crush": -10.0
+      }
+    },
+    {
+      "activity": "Cerberus",
+      "variant": "Melee",
+      "weapon": "Scythe of vitur",
+      "weaponStyles": [
+        "slash"
+      ],
+      "solverStyle": "crush",
+      "agree": false,
+      "defences": {
+        "stab": 50.0,
+        "slash": 100.0,
+        "crush": 25.0
+      }
+    },
+    {
+      "activity": "Corporeal Beast",
+      "variant": "Best in slot",
+      "weapon": "Osmumten's fang",
+      "weaponStyles": [
+        "slash",
+        "stab"
+      ],
+      "solverStyle": "stab",
+      "agree": true,
+      "defences": {
+        "stab": 25.0,
+        "slash": 200.0,
+        "crush": 100.0
+      }
+    },
+    {
+      "activity": "Demonic Brutus",
+      "variant": "Inventory",
+      "weapon": "Scythe of vitur",
+      "weaponStyles": [
+        "slash"
+      ],
+      "solverStyle": "slash",
+      "agree": true,
+      "defences": {
+        "stab": 182.0,
+        "slash": 65.0,
+        "crush": 216.0
+      }
+    },
+    {
+      "activity": "Duke Sucellus",
+      "variant": "Inventory recommendations",
+      "weapon": "Scythe of vitur",
+      "weaponStyles": [
+        "slash"
+      ],
+      "solverStyle": "slash",
+      "agree": true,
+      "defences": {
+        "stab": 255.0,
+        "slash": 65.0,
+        "crush": 190.0
+      }
+    },
+    {
+      "activity": "Giant Mole",
+      "variant": "Melee",
+      "weapon": "Osmumten's fang",
+      "weaponStyles": [
+        "slash",
+        "stab"
+      ],
+      "solverStyle": "stab",
+      "agree": true,
+      "defences": {
+        "stab": 60.0,
+        "slash": 80.0,
+        "crush": 100.0
+      }
+    },
+    {
+      "activity": "Green dragon",
+      "variant": "Melee",
+      "weapon": "Dragon hunter lance",
+      "weaponStyles": [
+        "crush",
+        "slash",
+        "stab"
+      ],
+      "solverStyle": "stab",
+      "agree": true,
+      "defences": {
+        "stab": 0.0,
+        "slash": 40.0,
+        "crush": 40.0
+      }
+    },
+    {
+      "activity": "Hespori",
+      "variant": "Best-in-slot",
+      "weapon": "Scythe of vitur",
+      "weaponStyles": [
+        "slash"
+      ],
+      "solverStyle": "slash",
+      "agree": true,
+      "defences": {
+        "stab": 60.0,
+        "slash": 20.0,
+        "crush": 60.0
+      }
+    },
+    {
+      "activity": "King Black Dragon",
+      "variant": "Melee",
+      "weapon": "Dragon hunter lance",
+      "weaponStyles": [
+        "crush",
+        "slash",
+        "stab"
+      ],
+      "solverStyle": "stab",
+      "agree": true,
+      "defences": {
+        "stab": 40.0,
+        "slash": 90.0,
+        "crush": 90.0
+      }
+    },
+    {
+      "activity": "K'ril Tsutsaroth",
+      "variant": "Melee",
+      "weapon": "Emberlight",
+      "weaponStyles": [
+        "slash",
+        "stab"
+      ],
+      "solverStyle": "stab",
+      "agree": true,
+      "defences": {
+        "stab": 70.0,
+        "slash": 80.0,
+        "crush": 80.0
+      }
+    },
+    {
+      "activity": "Lizardman shaman",
+      "variant": "Melee",
+      "weapon": "Ghrazi rapier",
+      "weaponStyles": [
+        "stab"
+      ],
+      "solverStyle": "stab",
+      "agree": true,
+      "defences": {
+        "stab": -20.0,
+        "slash": 40.0,
+        "crush": 30.0
+      }
+    },
+    {
+      "activity": "Mad Angel",
+      "variant": "Melee",
+      "weapon": "Granite hammer",
+      "weaponStyles": [
+        "crush"
+      ],
+      "solverStyle": "crush",
+      "agree": true,
+      "defences": {
+        "stab": 60.0,
+        "slash": 80.0,
+        "crush": 40.0
+      }
+    },
+    {
+      "activity": "Mithril dragon",
+      "variant": "Melee",
+      "weapon": "Dragon hunter lance",
+      "weaponStyles": [
+        "crush",
+        "slash",
+        "stab"
+      ],
+      "solverStyle": "stab",
+      "agree": true,
+      "defences": {
+        "stab": 0.0,
+        "slash": 100.0,
+        "crush": 70.0
+      }
+    },
+    {
+      "activity": "Nex",
+      "variant": "Hybrid",
+      "weapon": "Osmumten's fang",
+      "weaponStyles": [
+        "slash",
+        "stab"
+      ],
+      "solverStyle": "stab",
+      "agree": true,
+      "defences": {
+        "stab": 40.0,
+        "slash": 140.0,
+        "crush": 60.0
+      }
+    },
+    {
+      "activity": "Phantom Muspah",
+      "variant": "Melee",
+      "weapon": "Scythe of vitur",
+      "weaponStyles": [
+        "slash"
+      ],
+      "solverStyle": "crush",
+      "agree": false,
+      "defences": {
+        "stab": 185.0,
+        "slash": 134.0,
+        "crush": 120.0
+      }
+    },
+    {
+      "activity": "Phosani's Nightmare",
+      "variant": "Budget",
+      "weapon": "Dual macuahuitl",
+      "weaponStyles": [
+        "crush",
+        "stab"
+      ],
+      "solverStyle": "crush",
+      "agree": true,
+      "defences": {
+        "stab": 120.0,
+        "slash": 180.0,
+        "crush": 40.0
+      }
+    },
+    {
+      "activity": "Rune dragon",
+      "variant": "Melee",
+      "weapon": "Dragon hunter lance",
+      "weaponStyles": [
+        "crush",
+        "slash",
+        "stab"
+      ],
+      "solverStyle": "stab",
+      "agree": true,
+      "defences": {
+        "stab": 20.0,
+        "slash": 115.0,
+        "crush": 90.0
+      }
+    },
+    {
+      "activity": "Sarachnis",
+      "variant": "Melee (Low level)",
+      "weapon": "Dual macuahuitl",
+      "weaponStyles": [
+        "crush",
+        "stab"
+      ],
+      "solverStyle": "crush",
+      "agree": true,
+      "defences": {
+        "stab": 60.0,
+        "slash": 40.0,
+        "crush": 10.0
+      }
+    },
+    {
+      "activity": "Shellbane gryphon",
+      "variant": "Melee",
+      "weapon": "Scythe of vitur",
+      "weaponStyles": [
+        "slash"
+      ],
+      "solverStyle": "stab",
+      "agree": false,
+      "defences": {
+        "stab": 10.0,
+        "slash": 20.0,
+        "crush": 40.0
+      }
+    },
+    {
+      "activity": "Skeletal Wyvern",
+      "variant": "Melee",
+      "weapon": "Dragon hunter lance",
+      "weaponStyles": [
+        "crush",
+        "slash",
+        "stab"
+      ],
+      "solverStyle": "slash",
+      "agree": true,
+      "defences": {
+        "stab": 140.0,
+        "slash": 90.0,
+        "crush": 90.0
+      }
+    },
+    {
+      "activity": "Spindel",
+      "variant": "Melee",
+      "weapon": "Ursine chainmace",
+      "weaponStyles": [
+        "crush",
+        "stab"
+      ],
+      "solverStyle": "crush",
+      "agree": true,
+      "defences": {
+        "stab": 70.0,
+        "slash": 70.0,
+        "crush": 10.0
+      }
+    },
+    {
+      "activity": "The Hueycoatl",
+      "variant": "Melee",
+      "weapon": "Dual macuahuitl",
+      "weaponStyles": [
+        "crush",
+        "stab"
+      ],
+      "solverStyle": "crush",
+      "agree": true,
+      "defences": {
+        "stab": 100.0,
+        "slash": 100.0,
+        "crush": 0.0
+      }
+    },
+    {
+      "activity": "The Mimic",
+      "variant": "Melee",
+      "weapon": "Abyssal tentacle",
+      "weaponStyles": [
+        "slash"
+      ],
+      "solverStyle": "crush",
+      "agree": false,
+      "defences": {
+        "stab": 160.0,
+        "slash": 165.0,
+        "crush": 150.0
+      }
+    },
+    {
+      "activity": "The Nightmare",
+      "variant": "Melee",
+      "weapon": "Scythe of vitur",
+      "weaponStyles": [
+        "slash"
+      ],
+      "solverStyle": "crush",
+      "agree": false,
+      "defences": {
+        "stab": 120.0,
+        "slash": 180.0,
+        "crush": 40.0
+      }
+    },
+    {
+      "activity": "Thermonuclear smoke devil",
+      "variant": "Melee",
+      "weapon": "Scythe of vitur",
+      "weaponStyles": [
+        "slash"
+      ],
+      "solverStyle": "slash",
+      "agree": true,
+      "defences": {
+        "stab": 11.0,
+        "slash": 4.0,
+        "crush": 9.0
+      }
+    },
+    {
+      "activity": "Tormented Demon",
+      "variant": "Budget Melee/Mage",
+      "weapon": "Arclight",
+      "weaponStyles": [
+        "slash"
+      ],
+      "solverStyle": "crush",
+      "agree": false,
+      "defences": {
+        "stab": 75.0,
+        "slash": 175.0,
+        "crush": 68.0
+      }
+    },
+    {
+      "activity": "Vardorvis",
+      "variant": "Awakened",
+      "weapon": "Soulreaper axe",
+      "weaponStyles": [
+        "slash"
+      ],
+      "solverStyle": "slash",
+      "agree": true,
+      "defences": {
+        "stab": 215.0,
+        "slash": 65.0,
+        "crush": 85.0
+      }
+    },
+    {
+      "activity": "Venenatis",
+      "variant": "Example melee setup",
+      "weapon": "Ursine chainmace",
+      "weaponStyles": [
+        "crush",
+        "stab"
+      ],
+      "solverStyle": "crush",
+      "agree": true,
+      "defences": {
+        "stab": 100.0,
+        "slash": 100.0,
+        "crush": 10.0
+      }
+    },
+    {
+      "activity": "Vet'ion",
+      "variant": "Example setup",
+      "weapon": "Ursine chainmace",
+      "weaponStyles": [
+        "crush",
+        "stab"
+      ],
+      "solverStyle": "crush",
+      "agree": true,
+      "defences": {
+        "stab": 201.0,
+        "slash": 200.0,
+        "crush": -10.0
+      }
+    },
+    {
+      "activity": "Vorkath",
+      "variant": "Melee",
+      "weapon": "Dragon hunter lance",
+      "weaponStyles": [
+        "crush",
+        "slash",
+        "stab"
+      ],
+      "solverStyle": "stab",
+      "agree": true,
+      "defences": {
+        "stab": 26.0,
+        "slash": 108.0,
+        "crush": 108.0
+      }
+    },
+    {
+      "activity": "Yama",
+      "variant": "Bloodied Blows",
+      "weapon": "Purging staff",
+      "weaponStyles": [
+        "crush"
+      ],
+      "solverStyle": "slash",
+      "agree": false,
+      "defences": {
+        "stab": 100.0,
+        "slash": 80.0,
+        "crush": 333.0
+      }
+    }
+  ]
+}
