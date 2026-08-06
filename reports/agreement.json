@@ -15,50 +15,54 @@
     "atOrBelowBaseline": 1
   },
   "unconstrained": {
-    "medianDelta": 1.0762,
-    "meanDelta": 1.0762
+    "medianDelta": 1.4293,
+    "meanDelta": 1.4293
   },
   "findings": 0,
+  "singleTargetRows": 1,
+  "singleTargetMedianDelta": 0.0,
+  "perBossRows": 0,
+  "perBossAboveThreshold": 0,
   "styleSwitches": 0,
   "skipped": [],
-  "elapsedSeconds": 25.1,
+  "elapsedSeconds": 25.3,
   "rows": [
     {
-      "activity": "Alchemical Hydra",
-      "target": "Alchemical Hydra",
-      "label": "Alchemical Hydra",
+      "activity": "Scurrius",
+      "target": "Scurrius",
+      "label": "Scurrius",
       "baseline": {
-        "dps": 12.10271315105082,
-        "variant": "Ranged",
-        "style": "ranged",
-        "styleName": "Rapid",
+        "dps": 12.819925111673678,
+        "variant": "Melee (high level)",
+        "style": "slash",
+        "styleName": "Chop",
         "spell": "",
         "warnings": []
       },
       "constrained": {
-        "dps": 12.1027,
+        "dps": 12.8199,
         "delta": 0.0,
-        "weapon": "Twisted bow",
-        "style": "ranged",
-        "styleName": "Rapid",
+        "weapon": "Scythe of vitur",
+        "style": "slash",
+        "styleName": "Chop",
         "spell": "",
-        "ammo": "Dragon arrow",
+        "ammo": "",
         "gear": {
-          "head": "Slayer helmet (i)",
-          "cape": "Dizana's quiver",
-          "neck": "Necklace of rupture",
-          "body": "Masori body (f)",
-          "legs": "Masori chaps (f)",
-          "hands": "Zaryte vambraces",
+          "head": "Torva full helm",
+          "cape": "Infernal cape",
+          "neck": "Amulet of rancour",
+          "body": "Torva platebody",
+          "legs": "Torva platelegs",
+          "hands": "Ferocious gloves",
           "feet": "Avernic treads (max)",
           "ring": "Ultor ring"
         },
         "warnings": [],
-        "profile": "Rigour + Ranging"
+        "profile": "Piety + Super Combat"
       },
       "unconstrained": {
-        "dps": 25.1278,
-        "delta": 1.0762,
+        "dps": 31.1432,
+        "delta": 1.4293,
         "weapon": "Ancient gorilla greegree",
         "style": "crush",
         "styleName": "Kick",
@@ -68,17 +72,18 @@
           "head": "Inquisitor's great helm",
           "cape": "Infernal cape",
           "neck": "Wilderness champion amulet",
-          "body": "Inquisitor's hauberk",
+          "body": "Torva platebody",
           "shield": "Avernic defender",
-          "legs": "Inquisitor's plateskirt",
-          "hands": "Ferocious gloves",
-          "feet": "Avernic treads",
+          "legs": "Torva platelegs",
+          "hands": "Barrows gloves (wrapped)",
+          "feet": "Avernic treads (max)",
           "ring": "Ultor ring"
         },
         "warnings": [],
         "profile": "Piety + Super Combat"
       },
       "isFinding": false,
+      "perBoss": false,
       "styleSwitch": false
     }
   ]

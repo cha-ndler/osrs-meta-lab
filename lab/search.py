@@ -81,21 +81,29 @@ def _loadout(weapon: Item, gear: dict[str, Item], style_index: int,
     return out
 
 
-def reference_gear(data: Data, style: str) -> dict[str, Item]:
+def reference_gear(data: Data, style: str,
+                   pool: dict[str, list[Item]] | None = None) -> dict[str, Item]:
     """A fixed, decent kit used to rank weapons against one another.
 
     Weapons are compared on equal footing rather than each at its own optimum,
     which would be circular - you cannot pick the best gear for a weapon before
     knowing whether the weapon is worth keeping. Anything surviving this stage
     gets its gear optimised properly afterwards.
+
+    The kit must come from the same pool the solve will use. Ranking candidates
+    in best-in-game gear and then making them fight in a published setup's
+    armour picks the wrong ones entirely: magic weapons win the audition on
+    full ancestral, then take the field in melee armour and lose to the setup
+    they were supposed to beat. That produced solves scoring 40% *below* the
+    published loadout they were drawn from.
     """
     out: dict[str, Item] = {}
     for slot in GEAR_SLOTS:
         if slot == "ammo":
             continue
-        pool = data.in_slot(slot)
-        if pool:
-            out[slot] = max(pool, key=lambda i: i.offence(style) + i.strength(style))
+        items = pool.get(slot) if pool is not None else data.in_slot(slot)
+        if items:
+            out[slot] = max(items, key=lambda i: i.offence(style) + i.strength(style))
     return out
 
 
@@ -125,20 +133,29 @@ def best_ammo(data: Data, weapon: Item,
 
 def weapon_shortlist(data: Data, monster_name: str, style: str, keep: int = 12, *,
                      inputs: dict | None = None, version: str | None = None,
-                     restrict: set[int] | None = None) -> list[Candidate]:
+                     restrict: set[int] | None = None,
+                     pool: dict[str, list[Item]] | None = None) -> list[Candidate]:
     """Score every weapon that can attack with `style`; return the best.
 
-    `restrict` limits the scan to a set of item ids, which is how a solve is
-    held to the same weapons a published setup draws from.
+    `restrict` limits the scan to a set of item ids and `pool` supplies the kit
+    they are auditioned in; together they hold a solve to the same tier as a
+    published setup.
     """
-    weapons = data.dedupe([i for i in data.equipment if i.slot == "weapon"])
-    reference = reference_gear(data, style)
+    # Restrict *before* collapsing aliases. The other order silently discards
+    # the published weapon whenever an ornamented sibling sorts ahead of it:
+    # the Holy scythe of vitur shares a canonical id with the plain one, won
+    # the tie, and Araxxor's melee solve was left with no candidates at all
+    # while its published setup was a Scythe.
+    weapons = [i for i in data.equipment if i.slot == "weapon"]
+    if restrict is not None:
+        weapons = [i for i in weapons if i.id in restrict]
+    weapons = data.dedupe(weapons)
+    reference = reference_gear(data, style, pool)
+    ammo_allowed = None if pool is None else {i.id for i in pool.get("ammo", [])}
 
     batch: list[dict] = []
     refs: list[tuple[Item, int, str | None]] = []
     for weapon in weapons:
-        if restrict is not None and weapon.id not in restrict:
-            continue
         entries = data.style_entries(weapon, style)
         if not entries:
             continue
@@ -149,7 +166,9 @@ def weapon_shortlist(data: Data, monster_name: str, style: str, keep: int = 12, 
                     if (e.get("stance") or "").lower() == "autocast"]
         if style == "magic" and autocast:
             entries = autocast
-        ammo = best_ammo(data, weapon)
+        ammo = best_ammo(data, weapon, ammo_allowed)
+        if data.ammo_for(weapon) is not None and ammo is None:
+            continue          # the pool supplies nothing this can fire
         for entry in entries:
             # A powered staff supplies its own attack and takes no spell, so
             # None always has to be on the table alongside any spell list.

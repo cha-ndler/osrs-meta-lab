@@ -150,9 +150,13 @@ def best_solve(data: Data, target: dict, *, pool=None, restrict=None,
     inputs = target.get("inputs")
     best = None
     for style in STYLES:
-        candidates = weapon_shortlist(data, monster, style, keep=weapons,
+        # Constrained solves keep every published weapon rather than a top
+        # slice: there are only ever a handful, and dropping one means the
+        # setup the comparison is against may not be reachable at all.
+        keep = max(weapons, len(restrict)) if restrict else weapons
+        candidates = weapon_shortlist(data, monster, style, keep=keep,
                                       restrict=restrict, version=version,
-                                      inputs=inputs)
+                                      inputs=inputs, pool=pool)
         if not candidates:
             continue
         results = solve(data, monster, style, candidates=candidates,
@@ -230,14 +234,22 @@ def main() -> int:
             con_delta = (con.dps - base["dps"]) / base["dps"] if base["dps"] else 0
             unc_delta = (unc.dps - base["dps"]) / base["dps"] if base["dps"] else 0
             emit(rows, activity, target, label, base, con, con_style, unc,
-                 unc_style, con_delta, unc_delta)
+                 unc_style, con_delta, unc_delta, per_boss=len(targets) > 1)
 
     return finish(rows, skipped, started)
 
 
 
 def emit(rows, activity, target, label, base, con, con_style, unc, unc_style,
-         con_delta, unc_delta) -> None:
+         con_delta, unc_delta, per_boss: bool = False) -> None:
+    # A multi-boss activity publishes one kit for the whole encounter, so
+    # letting the solver re-optimise per boss and calling the gap a finding
+    # measures nothing: of course a loadout picked for Vespula beats one picked
+    # for the whole raid. Doing it anyway flagged 31 of 35 "findings", every
+    # Theatre of Blood boss among them. The rows are kept - knowing your raid
+    # kit does 0.256 dps at Vespula is worth knowing - but they are per-boss
+    # detail, not a disagreement with the page.
+    is_finding = con_delta >= FINDING_THRESHOLD and not per_boss
     rows.append({
         "activity": activity,
         "target": target["monster"],
@@ -258,10 +270,11 @@ def emit(rows, activity, target, label, base, con, con_style, unc, unc_style,
             "ammo": unc.ammo, "gear": unc.gear, "warnings": unc.warnings,
             "profile": describe_profile(unc_style),
         },
-        "isFinding": con_delta >= FINDING_THRESHOLD,
+        "isFinding": is_finding,
+        "perBoss": per_boss,
         "styleSwitch": con_style != base["style"],
     })
-    flag = "FINDING" if con_delta >= FINDING_THRESHOLD else "       "
+    flag = "FINDING" if is_finding else ("per-boss" if per_boss else "        ")
     print(f"  {flag} {label:<40} base {base['dps']:6.3f} -> "
           f"same-tier {con.dps:6.3f} ({con_delta:+6.1%})  "
           f"ceiling {unc.dps:6.3f} ({unc_delta:+6.1%})  {con.weapon}")
@@ -271,6 +284,9 @@ def finish(rows: list[dict], skipped: list[str], started: float) -> int:
     con_deltas = [r["constrained"]["delta"] for r in rows]
     unc_deltas = [r["unconstrained"]["delta"] for r in rows]
     findings = [r for r in rows if r["isFinding"]]
+    per_boss_rows = [r for r in rows if r["perBoss"]]
+    single = [r for r in rows if not r["perBoss"]]
+    single_deltas = [r["constrained"]["delta"] for r in single]
     summary = {
         "checked": len(rows),
         "activities": len({r["activity"] for r in rows}),
@@ -286,6 +302,12 @@ def finish(rows: list[dict], skipped: list[str], started: float) -> int:
             "meanDelta": round(statistics.fmean(unc_deltas), 4) if unc_deltas else None,
         },
         "findings": len(findings),
+        "singleTargetRows": len(single),
+        "singleTargetMedianDelta": (round(statistics.median(single_deltas), 4)
+                                    if single_deltas else None),
+        "perBossRows": len(per_boss_rows),
+        "perBossAboveThreshold": len([r for r in per_boss_rows
+                                      if r["constrained"]["delta"] >= FINDING_THRESHOLD]),
         "styleSwitches": len([r for r in rows if r["styleSwitch"]]),
         "skipped": skipped,
         "elapsedSeconds": round(time.time() - started, 1),
@@ -317,7 +339,11 @@ def finish(rows: list[dict], skipped: list[str], started: float) -> int:
         print(f"unconstrained ceiling median:  {summary['unconstrained']['medianDelta']:+.2%}")
         print(f"solver at or below baseline:   "
               f"{summary['constrained']['atOrBelowBaseline']}/{len(rows)}")
-    print(f"candidate findings (>= {FINDING_THRESHOLD:.0%} same-tier): {len(findings)}")
+    print(f"candidate findings (>= {FINDING_THRESHOLD:.0%} same-tier, "
+          f"single-target activities): {len(findings)}")
+    print(f"per-boss rows of multi-boss activities: {len(per_boss_rows)} "
+          f"({summary['perBossAboveThreshold']} over threshold, reported as detail "
+          f"rather than findings)")
     print(f"skipped: {len(skipped)}")
     return 0
 

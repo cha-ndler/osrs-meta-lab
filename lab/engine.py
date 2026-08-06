@@ -226,16 +226,24 @@ class Data:
         return self.aliases.get(item_id, item_id)
 
     def dedupe(self, items: list[Item]) -> list[Item]:
-        """Keep the first of each mechanically distinct item, preserving order."""
-        seen: set[int] = set()
-        out: list[Item] = []
+        """Keep one of each mechanically distinct item, preserving order.
+
+        The survivor is the canonical id where the group contains it, so a
+        report says "Scythe of vitur" rather than naming whichever ornamented
+        variant happened to appear first in the file. They are the same weapon
+        by upstream's own alias table, but only one of them is the one people
+        mean.
+        """
+        groups: dict[int, Item] = {}
+        order: list[int] = []
         for item in items:
             key = self.canonical(item.id)
-            if key in seen:
-                continue
-            seen.add(key)
-            out.append(item)
-        return out
+            if key not in groups:
+                groups[key] = item
+                order.append(key)
+            elif item.id == key:
+                groups[key] = item          # the plain item outranks a variant
+        return [groups[k] for k in order]
 
     @cached_property
     def mechanically_special(self) -> set[str]:
