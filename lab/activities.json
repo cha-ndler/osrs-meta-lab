@@ -138,12 +138,8 @@
     { "monster": "Penance Queen" }
   ],
 
-  "Abyss": [
-    { "monster": "Abyssal guardian" },
-    { "monster": "Abyssal walker" },
-    { "monster": "Abyssal leech" }
-  ],
-
+  "Abyss": [],
+  "Zalcano": [],
   "Hespori (Echo)": [],
   "Nightmare Zone": [],
   "Chest (Rogues' Castle)": [],
@@ -164,6 +160,8 @@
   "_reasons": {
     "_comment": "Why an activity above has no targets. 'no-dps-answer' and 'absent-upstream' are different facts and are worth keeping apart: the first is settled, the second changes when the calculator's data does.",
 
+    "Abyss": "no-dps-answer: the published setups are runecrafting kits built around a pickaxe, so a DPS comparison against the abyssal guardians measures nothing. Solving it anyway produced the first false finding this gate ever emitted - an Infernal pickaxe, +16.4%.",
+    "Zalcano": "no-dps-answer: killed by mining and throwing rocks rather than by attacking, and every published setup is a pickaxe. The calculator has stats for it, which is exactly why this has to be stated rather than left to the name lookup.",
     "Chest (Rogues' Castle)": "no-dps-answer: a loot container, not a fight",
     "Ecumenical key": "no-dps-answer: an item, not a fight",
     "Fishing Trawler": "no-dps-answer: skilling minigame",
