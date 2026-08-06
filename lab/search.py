@@ -99,17 +99,25 @@ def reference_gear(data: Data, style: str) -> dict[str, Item]:
     return out
 
 
-def best_ammo(data: Data, weapon: Item) -> int | None:
-    """Strongest ammo the weapon actually accepts, or None if it takes none.
+def best_ammo(data: Data, weapon: Item,
+              allowed: set[int] | None = None) -> int | None:
+    """Strongest ammo the weapon accepts, or None if it takes none.
 
     A bow holding bolts is not a weak loadout, it is a zero - the calculator
     discards the ammo's bonuses entirely - so the pairing is constrained here
     rather than left for the search to discover.
+
+    `allowed` narrows the choice to a published pool. Without it a same-tier
+    solve would quietly reach for the best arrow in the game while claiming to
+    use only the gear a wiki page names, which is the tier gap the constraint
+    exists to close, reopened one slot at a time.
     """
     valid = data.ammo_for(weapon)
     if not valid:
         return None
     items = [data.by_id[a] for a in valid if a in data.by_id]
+    if allowed is not None:
+        items = [i for i in items if i.id in allowed]
     if not items:
         return None
     return max(items, key=lambda i: (i.strength("ranged"), i.offence("ranged"))).id
@@ -205,7 +213,18 @@ def solve(data: Data, monster_name: str, style: str, *,
     pools = pool if pool is not None else {
         slot: data.shortlist(slot, style, slot_keep) for slot in GEAR_SLOTS
     }
-    ammo = {c.weapon.id: best_ammo(data, c.weapon) for c in candidates}
+    # A constrained solve draws its ammunition from the same pool as everything
+    # else. A weapon whose ammunition the pool does not supply cannot be fired
+    # at this tier and drops out, which is the honest answer rather than
+    # borrowing an arrow from outside the constraint.
+    allowed_ammo = None
+    if pool is not None:
+        allowed_ammo = {i.id for i in pool.get("ammo", [])}
+    ammo = {c.weapon.id: best_ammo(data, c.weapon, allowed_ammo) for c in candidates}
+    candidates = [c for c in candidates
+                  if data.ammo_for(c.weapon) is None or ammo[c.weapon.id] is not None]
+    if not candidates:
+        return []
 
     # Every weapon advances through the same slot at the same time, so one
     # oracle call covers the whole fleet. Scoring per weapon instead would spawn
