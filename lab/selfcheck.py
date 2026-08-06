@@ -88,6 +88,14 @@ def main() -> int:
           "COMBAT_PROFILES" in engine
           and all(p in engine for p in ("PIETY", "RIGOUR", "AUGURY")))
 
+    # The mode-restricted filter must not reach published setups. Last Man
+    # Standing and the Gauntlet name their tiers identically, so filtering by
+    # name deleted the Gauntlet's own crystal and corrupted gear from the
+    # Gauntlet's own page and left both Hunllefs unscorable.
+    agree = (ROOT / "lab" / "agree.py").read_text(encoding="utf-8")
+    check("published setups resolve against the unfiltered item table",
+          "by_id_unfiltered" in engine and "data.by_id[" not in agree)
+
     # The whole point of scoring through the calculator is that mechanics the
     # raw stats cannot express still count. Ranking weapons by a stat proxy
     # reintroduces exactly the blindness the oracle exists to remove: the Scythe

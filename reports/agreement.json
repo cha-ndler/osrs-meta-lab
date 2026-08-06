@@ -1,5 +1,5 @@
 {
-  "checked": 1,
+  "checked": 2,
   "activities": 1,
   "profiles": {
     "stab": "Piety + Super Combat",
@@ -10,59 +10,54 @@
   },
   "threshold": 0.02,
   "constrained": {
-    "medianDelta": 0.0569,
-    "meanDelta": 0.0569,
-    "atOrBelowBaseline": 0
+    "medianDelta": 0.0,
+    "meanDelta": 0.0,
+    "atOrBelowBaseline": 2
   },
   "unconstrained": {
-    "medianDelta": 1.9456,
-    "meanDelta": 1.9456
+    "medianDelta": 2.7937,
+    "meanDelta": 2.7937
   },
-  "findings": 1,
-  "singleTargetRows": 1,
-  "singleTargetMedianDelta": 0.0569,
-  "perBossRows": 0,
+  "findings": 0,
+  "singleTargetRows": 0,
+  "singleTargetMedianDelta": null,
+  "perBossRows": 2,
   "perBossAboveThreshold": 0,
   "styleSwitches": 0,
   "skipped": [],
-  "elapsedSeconds": 25.2,
+  "elapsedSeconds": 46.6,
   "rows": [
     {
-      "activity": "Sarachnis",
-      "target": "Sarachnis",
-      "label": "Sarachnis",
+      "activity": "The Gauntlet",
+      "target": "Crystalline Hunllef",
+      "label": "The Gauntlet / Crystalline Hunllef",
       "baseline": {
-        "dps": 10.115371797621966,
-        "variant": "Setup",
-        "style": "slash",
-        "styleName": "Chop",
+        "dps": 6.916085455989077,
+        "variant": "Desired equipment and inventory (3)",
+        "style": "ranged",
+        "styleName": "Rapid",
         "spell": "",
         "warnings": []
       },
       "constrained": {
-        "dps": 10.6913,
-        "delta": 0.0569,
-        "weapon": "Scythe of vitur",
-        "style": "slash",
-        "styleName": "Chop",
+        "dps": 6.9161,
+        "delta": 0.0,
+        "weapon": "Corrupted bow (perfected)",
+        "style": "ranged",
+        "styleName": "Rapid",
         "spell": "",
         "ammo": "",
         "gear": {
-          "head": "Torva full helm",
-          "cape": "Infernal cape",
-          "neck": "Amulet of fury",
-          "body": "Blood moon chestplate",
-          "legs": "Blood moon tassets",
-          "hands": "Ferocious gloves",
-          "feet": "Avernic treads (max)",
-          "ring": "Ultor ring"
+          "head": "Corrupted helm (attuned)",
+          "body": "Corrupted body (attuned)",
+          "legs": "Corrupted legs (attuned)"
         },
         "warnings": [],
-        "profile": "Piety + Super Combat"
+        "profile": "Rigour + Ranging"
       },
       "unconstrained": {
-        "dps": 29.7958,
-        "delta": 1.9456,
+        "dps": 26.2377,
+        "delta": 2.7937,
         "weapon": "Ancient gorilla greegree",
         "style": "crush",
         "styleName": "Kick",
@@ -72,18 +67,72 @@
           "head": "Inquisitor's great helm",
           "cape": "Infernal cape",
           "neck": "Wilderness champion amulet",
-          "body": "Torva platebody",
+          "body": "Inquisitor's hauberk",
           "shield": "Avernic defender",
-          "legs": "Torva platelegs",
-          "hands": "Barrows gloves (wrapped)",
-          "feet": "Avernic treads (max)",
+          "legs": "Inquisitor's plateskirt",
+          "hands": "Ferocious gloves",
+          "feet": "Avernic treads",
           "ring": "Ultor ring"
         },
         "warnings": [],
         "profile": "Piety + Super Combat"
       },
-      "isFinding": true,
-      "perBoss": false,
+      "isFinding": false,
+      "perBoss": true,
+      "styleSwitch": false
+    },
+    {
+      "activity": "The Gauntlet",
+      "target": "Corrupted Hunllef",
+      "label": "The Gauntlet / Corrupted Hunllef",
+      "baseline": {
+        "dps": 6.916085455989077,
+        "variant": "Desired equipment and inventory (3)",
+        "style": "ranged",
+        "styleName": "Rapid",
+        "spell": "",
+        "warnings": []
+      },
+      "constrained": {
+        "dps": 6.9161,
+        "delta": 0.0,
+        "weapon": "Corrupted bow (perfected)",
+        "style": "ranged",
+        "styleName": "Rapid",
+        "spell": "",
+        "ammo": "",
+        "gear": {
+          "head": "Corrupted helm (attuned)",
+          "body": "Corrupted body (attuned)",
+          "legs": "Corrupted legs (attuned)"
+        },
+        "warnings": [],
+        "profile": "Rigour + Ranging"
+      },
+      "unconstrained": {
+        "dps": 26.2377,
+        "delta": 2.7937,
+        "weapon": "Ancient gorilla greegree",
+        "style": "crush",
+        "styleName": "Kick",
+        "spell": "",
+        "ammo": "",
+        "gear": {
+          "head": "Inquisitor's great helm",
+          "cape": "Infernal cape",
+          "neck": "Wilderness champion amulet",
+          "body": "Inquisitor's hauberk",
+          "shield": "Avernic defender",
+          "legs": "Inquisitor's plateskirt",
+          "hands": "Ferocious gloves",
+          "feet": "Avernic treads",
+          "ring": "Ultor ring"
+        },
+        "warnings": [],
+        "profile": "Piety + Super Combat"
+      },
+      "isFinding": false,
+      "perBoss": true,
       "styleSwitch": false
     }
   ]

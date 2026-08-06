@@ -125,12 +125,19 @@ finding this gate ever emitted: an Infernal pickaxe, +16.4%.
 - **No cost or obtainability.** Raw DPS ignores that a set costs 1.2b.
 - **No fight mechanics.** Phases, movement, downtime and supply use are not
   modelled. A loadout that wins on paper can lose on a real kill.
-- **Mode-restricted gear is filtered out.** Last Man Standing, Deadman and
-  Bounty Hunter items carry huge stats with no acquisition cost inside their own
-  mode. Unfiltered, "Corrupted halberd (perfected)" wins nearly every boss.
-  Barbarian Assault arrows are excluded for the same reason and were harder to
-  catch: nothing in the name says minigame, and at 125 ranged strength against a
-  dragon arrow's 60 they beat every real arrow in the game.
+- **Mode-restricted gear is filtered out of the *search*.** Last Man Standing,
+  Deadman and Bounty Hunter items carry huge stats with no acquisition cost
+  inside their own mode. Unfiltered, "Corrupted halberd (perfected)" wins nearly
+  every boss. Barbarian Assault arrows are excluded for the same reason and were
+  harder to catch: nothing in the name says minigame, and at 125 ranged strength
+  against a dragon arrow's 60 they beat every real arrow in the game.
+
+  Published setups are read through the *unfiltered* table, because a page
+  naming an item for an activity is evidence the player has it there. The
+  Gauntlet is why: its crystal and corrupted gear is made from shards inside the
+  encounter and uses the same basic/attuned/perfected tier names as Last Man
+  Standing, so filtering it everywhere deleted the Gauntlet's own gear from the
+  Gauntlet's own page and left both Hunllefs unscorable.
 - **Loadouts the calculator cannot model faithfully leave the search**, and any
   warning it does attach is reproduced in the report. "7.4 dps" and "7.4 dps,
   ignoring your set effect" are not the same claim.

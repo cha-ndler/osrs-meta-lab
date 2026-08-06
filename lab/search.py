@@ -146,9 +146,14 @@ def weapon_shortlist(data: Data, monster_name: str, style: str, keep: int = 12, 
     # the Holy scythe of vitur shares a canonical id with the plain one, won
     # the tie, and Araxxor's melee solve was left with no candidates at all
     # while its published setup was a Scythe.
-    weapons = [i for i in data.equipment if i.slot == "weapon"]
-    if restrict is not None:
-        weapons = [i for i in weapons if i.id in restrict]
+    if restrict is None:
+        weapons = [i for i in data.equipment if i.slot == "weapon"]
+    else:
+        # A restricted scan names its weapons explicitly, so it resolves them
+        # against the unfiltered table. The mode-restricted filter would
+        # otherwise delete the Gauntlet's own bow from a Gauntlet solve.
+        weapons = [i for i in (data.by_id_unfiltered.get(w) for w in restrict)
+                   if i is not None and i.slot == "weapon"]
     weapons = data.dedupe(weapons)
     reference = reference_gear(data, style, pool)
     ammo_allowed = None if pool is None else {i.id for i in pool.get("ammo", [])}

@@ -207,6 +207,39 @@ class Data:
         return out
 
     @cached_property
+    def by_id_unfiltered(self) -> dict[int, Item]:
+        """Every item, including the mode-restricted ones.
+
+        The exclusions above stop the solver reaching for gear it cannot bring,
+        which is right when it is choosing freely and wrong when it is reading a
+        published setup. The tiers are named the same way in Last Man Standing
+        and in the Gauntlet, so "Corrupted bow (perfected)" is filtered
+        everywhere - including at the Gauntlet, where it is made from shards
+        inside the encounter and is the entire point. Both Hunllefs were
+        unscorable for that reason: their published setup had been deleted out
+        from under them.
+
+        A page naming an item for an activity is evidence the player has it
+        there, so baselines and published pools resolve against this map while
+        the unconstrained search still resolves against the filtered one.
+        """
+        out: dict[int, Item] = {}
+        for e in json.loads((CDN / "equipment.json").read_text(encoding="utf-8")):
+            item = Item(
+                id=e.get("id", -1),
+                name=e.get("name", ""),
+                version=e.get("version", "") or "",
+                slot=(e.get("slot") or "").lower(),
+                speed=e.get("speed") or 4,
+                category=e.get("category") or "",
+                two_handed=bool(e.get("isTwoHanded")),
+                offensive=e.get("offensive") or {},
+                bonuses=e.get("bonuses") or {},
+            )
+            out.setdefault(item.id, item)
+        return out
+
+    @cached_property
     def aliases(self) -> dict[int, int]:
         """Cosmetic variant id -> the item it is mechanically identical to.
 

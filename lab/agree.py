@@ -58,10 +58,18 @@ SLOT_MAP = {
 
 
 def baseline_gear(variant: dict, data: Data) -> dict[str, int]:
+    """A published setup's equipment, by calculator slot.
+
+    Resolved against the unfiltered item table. The mode-restricted filter is
+    there to stop the solver choosing gear it cannot bring, but a wiki page
+    naming an item for an activity is evidence the player has it there - and
+    applying the filter here deleted the Gauntlet's own crystal and corrupted
+    gear from the Gauntlet's own setups.
+    """
     out: dict[str, int] = {}
     for theirs, ours in SLOT_MAP.items():
         item_id = variant.get("equipment", {}).get(theirs)
-        if item_id and item_id in data.by_id:
+        if item_id and item_id in data.by_id_unfiltered:
             out[ours] = item_id
     return out
 
@@ -77,7 +85,7 @@ def published_pool(record: dict, data: Data) -> dict[str, list]:
     for variant in record["variants"]:
         for slot, item_id in baseline_gear(variant, data).items():
             if slot in pool:
-                pool[slot][item_id] = data.by_id[item_id]
+                pool[slot][item_id] = data.by_id_unfiltered[item_id]
     return {slot: list(items.values()) for slot, items in pool.items()}
 
 
@@ -102,7 +110,7 @@ def score_baseline(target: dict, record: dict, data: Data) -> dict | None:
         gear = baseline_gear(variant, data)
         if "weapon" not in gear:
             continue
-        weapon = data.by_id[gear["weapon"]]
+        weapon = data.by_id_unfiltered[gear["weapon"]]
         for style in STYLES:
             for entry in data.style_entries(weapon, style):
                 spells: list[str | None] = [None]
@@ -141,9 +149,9 @@ def score_baseline(target: dict, record: dict, data: Data) -> dict | None:
         "warnings": warnings_in(result),
         # The winning variant's own gear, used to start the constrained
         # ascent from the setup it is being measured against.
-        "gear": {slot: data.by_id[i]
+        "gear": {slot: data.by_id_unfiltered[i]
                  for slot, i in baseline_gear(variant, data).items()
-                 if i in data.by_id},
+                 if i in data.by_id_unfiltered},
     }
 
 
