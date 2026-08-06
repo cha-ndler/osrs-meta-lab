@@ -272,9 +272,22 @@ function pickStyle(
   return styles[Math.min(req.styleIndex ?? 0, styles.length - 1)];
 }
 
+const LOADOUT_KEYS = new Set([
+  'gear', 'styleIndex', 'styleType', 'spell', 'prayers', 'potions',
+  'buffs', 'skills', 'boosts',
+]);
+
 function score(monster: Monster, req: LoadoutRequest) {
   const player = emptyPlayer();
   const missing: string[] = [];
+
+  // An unrecognised key is a caller error, and silence is expensive: putting
+  // `profile` on a loadout instead of on the batch scored the whole comparison
+  // baseline with no prayers while the other side had them, which inflated
+  // every result by about the value of a prayer and looked like a discovery.
+  for (const key of Object.keys(req)) {
+    if (!LOADOUT_KEYS.has(key)) missing.push(`unknownField:${key}`);
+  }
 
   for (const [slot, ref] of Object.entries(req.gear ?? {})) {
     if (!SLOTS.includes(slot as keyof PlayerEquipment)) continue;
@@ -283,10 +296,19 @@ function score(monster: Monster, req: LoadoutRequest) {
       missing.push(`${slot}:${ref}`);
       continue;
     }
-    // A two-hander occupies the shield slot; leaving a shield on would inflate
-    // the result with bonuses the game would not grant.
-    if (slot === 'weapon' && piece.isTwoHanded) player.equipment.shield = null;
     (player.equipment as Record<string, EquipmentPiece | null>)[slot] = piece;
+  }
+
+  // A two-hander occupies the shield slot, so a shield alongside one would
+  // hand out bonuses the game never grants. This has to run after the whole
+  // loop rather than inside it: clearing the slot on seeing the weapon only
+  // works if the shield was already placed, and callers that list shield after
+  // weapon - which is most of them, it is the natural equipment order - were
+  // getting the shield back. It scored two-handed setups with a free
+  // Elidinis' ward, worth +25 magic attack and 5% damage.
+  if (player.equipment.weapon?.isTwoHanded && player.equipment.shield) {
+    player.equipment.shield = null;
+    missing.push('shield:dropped-for-two-handed');
   }
 
   if (req.skills) Object.assign(player.skills, req.skills);

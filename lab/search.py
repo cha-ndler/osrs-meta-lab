@@ -116,17 +116,31 @@ def best_ammo(data: Data, weapon: Item) -> int | None:
 
 
 def weapon_shortlist(data: Data, monster_name: str, style: str, keep: int = 12, *,
-                     inputs: dict | None = None) -> list[Candidate]:
-    """Score every weapon that can attack with `style`; return the best."""
+                     inputs: dict | None = None,
+                     restrict: set[int] | None = None) -> list[Candidate]:
+    """Score every weapon that can attack with `style`; return the best.
+
+    `restrict` limits the scan to a set of item ids, which is how a solve is
+    held to the same weapons a published setup draws from.
+    """
     weapons = data.dedupe([i for i in data.equipment if i.slot == "weapon"])
     reference = reference_gear(data, style)
 
     batch: list[dict] = []
     refs: list[tuple[Item, int, str | None]] = []
     for weapon in weapons:
+        if restrict is not None and weapon.id not in restrict:
+            continue
         entries = data.style_entries(weapon, style)
         if not entries:
             continue
+        # Every spellcasting stance rolls the same accuracy and damage, so when
+        # a weapon offers Autocast the other two are dominated and only add
+        # spell fan-out. Keeping all three cost 21s a monster to rediscover it.
+        autocast = [e for e in entries
+                    if (e.get("stance") or "").lower() == "autocast"]
+        if style == "magic" and autocast:
+            entries = autocast
         ammo = best_ammo(data, weapon)
         for entry in entries:
             # A powered staff supplies its own attack and takes no spell, so

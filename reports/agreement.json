@@ -1,201 +1,196 @@
 {
-  "checked": 8,
-  "medianDelta": 0.2194,
-  "meanDelta": 0.2142,
-  "atOrBelowBaseline": 1,
-  "findings": 7,
+  "checked": 3,
+  "profiles": {
+    "stab": "Piety + Super Combat",
+    "slash": "Piety + Super Combat",
+    "crush": "Piety + Super Combat",
+    "ranged": "Rigour + Ranging",
+    "magic": "Augury + Saturated Heart"
+  },
   "threshold": 0.02,
-  "skippedNoMonster": [
-    "Abyss",
-    "Barbarian Assault",
-    "Barrows"
+  "constrained": {
+    "medianDelta": 0.0,
+    "meanDelta": 0.003,
+    "atOrBelowBaseline": 2
+  },
+  "unconstrained": {
+    "medianDelta": 1.0762,
+    "meanDelta": 1.0062
+  },
+  "findings": 0,
+  "styleSwitches": 0,
+  "skipped": [
+    "Abyss (no monster)"
   ],
-  "skippedNoMeleeVariant": [
-    "Artio"
-  ],
-  "elapsedSeconds": 201.3,
+  "elapsedSeconds": 72.8,
   "rows": [
     {
       "activity": "Abyssal Sire",
-      "variant": "Melee - No defence reduction",
-      "baselineDps": 5.2523,
-      "baselineStyle": "Lunge",
-      "solverDps": 6.3641,
-      "solverWeapon": "Osmumten's fang",
-      "solverStyle": "Stab",
-      "delta": 0.2117,
-      "isFinding": true,
-      "gear": {
-        "head": "Maoma's great helm",
-        "cape": "Infernal cape",
-        "neck": "Wilderness champion amulet",
-        "ammo": "Adamant arrow",
-        "body": "Sanguine torva platebody",
-        "shield": "Avernic defender",
-        "legs": "Elite calamity breeches",
-        "hands": "Barrows gloves (wrapped)",
-        "feet": "Avernic treads (max)",
-        "ring": "Ultor ring"
-      }
+      "baseline": {
+        "dps": 9.901851426122606,
+        "variant": "Magic - Tumeken's Shadow",
+        "style": "magic",
+        "styleName": "Accurate",
+        "spell": "Dark Demonbane",
+        "warnings": []
+      },
+      "constrained": {
+        "dps": 9.9019,
+        "delta": 0.0,
+        "weapon": "Tumeken's shadow",
+        "style": "magic",
+        "styleName": "Accurate",
+        "spell": "",
+        "ammo": "",
+        "gear": {
+          "head": "Slayer helmet (i)",
+          "cape": "Imbued guthix cape",
+          "neck": "Occult necklace",
+          "body": "Ancestral robe top",
+          "legs": "Ancestral robe bottom",
+          "hands": "Confliction gauntlets",
+          "feet": "Avernic treads (max)",
+          "ring": "Magus ring"
+        },
+        "warnings": [],
+        "profile": "Augury + Saturated Heart"
+      },
+      "unconstrained": {
+        "dps": 22.2725,
+        "delta": 1.2493,
+        "weapon": "Ancient gorilla greegree",
+        "style": "crush",
+        "styleName": "Kick",
+        "spell": "",
+        "ammo": "",
+        "gear": {
+          "head": "Inquisitor's great helm",
+          "cape": "Infernal cape",
+          "neck": "Wilderness champion amulet",
+          "body": "Inquisitor's hauberk",
+          "shield": "Avernic defender",
+          "legs": "Inquisitor's plateskirt",
+          "hands": "Ferocious gloves",
+          "feet": "Avernic treads",
+          "ring": "Ultor ring"
+        },
+        "warnings": [],
+        "profile": "Piety + Super Combat"
+      },
+      "isFinding": false,
+      "styleSwitch": false
     },
     {
       "activity": "Adamant dragon",
-      "variant": "Melee",
-      "baselineDps": 5.0254,
-      "baselineStyle": "Lunge",
-      "solverDps": 6.6664,
-      "solverWeapon": "Osmumten's fang",
-      "solverStyle": "Stab",
-      "delta": 0.3265,
-      "isFinding": true,
-      "gear": {
-        "head": "Maoma's great helm",
-        "cape": "Infernal cape",
-        "neck": "Wilderness champion amulet",
-        "ammo": "Adamant arrow",
-        "body": "Sanguine torva platebody",
-        "shield": "Avernic defender",
-        "legs": "Elite calamity breeches",
-        "hands": "Barrows gloves (wrapped)",
-        "feet": "Avernic treads (max)",
-        "ring": "Ultor ring"
-      }
+      "baseline": {
+        "dps": 9.853223009306921,
+        "variant": "Magic - Tumeken's Shadow",
+        "style": "magic",
+        "styleName": "Accurate",
+        "spell": "Dark Demonbane",
+        "warnings": []
+      },
+      "constrained": {
+        "dps": 9.8532,
+        "delta": 0.0,
+        "weapon": "Tumeken's shadow",
+        "style": "magic",
+        "styleName": "Accurate",
+        "spell": "",
+        "ammo": "",
+        "gear": {
+          "head": "Slayer helmet (i)",
+          "cape": "Imbued saradomin cape",
+          "neck": "Occult necklace",
+          "body": "Ancestral robe top",
+          "legs": "Ancestral robe bottom",
+          "hands": "Confliction gauntlets",
+          "feet": "Avernic treads (max)",
+          "ring": "Magus ring"
+        },
+        "warnings": [],
+        "profile": "Augury + Saturated Heart"
+      },
+      "unconstrained": {
+        "dps": 16.6822,
+        "delta": 0.6931,
+        "weapon": "Ancient gorilla greegree",
+        "style": "crush",
+        "styleName": "Kick",
+        "spell": "",
+        "ammo": "",
+        "gear": {
+          "head": "Inquisitor's great helm",
+          "cape": "Infernal cape",
+          "neck": "Wilderness champion amulet",
+          "body": "Inquisitor's hauberk",
+          "shield": "Avernic defender",
+          "legs": "Inquisitor's plateskirt",
+          "hands": "Ferocious gloves",
+          "feet": "Avernic treads",
+          "ring": "Ultor ring"
+        },
+        "warnings": [],
+        "profile": "Piety + Super Combat"
+      },
+      "isFinding": false,
+      "styleSwitch": false
     },
     {
       "activity": "Alchemical Hydra",
-      "variant": "Melee",
-      "baselineDps": 6.2648,
-      "baselineStyle": "Chop",
-      "solverDps": 6.5307,
-      "solverWeapon": "Noxious halberd",
-      "solverStyle": "Jab",
-      "delta": 0.0424,
-      "isFinding": true,
-      "gear": {
-        "head": "Maoma's great helm",
-        "cape": "Infernal cape",
-        "neck": "Wilderness champion amulet",
-        "ammo": "Adamant arrow",
-        "body": "Oathplate chest",
-        "legs": "Sanguine torva platelegs",
-        "hands": "Barrows gloves (wrapped)",
-        "feet": "Avernic treads (max)",
-        "ring": "Ultor ring"
-      }
-    },
-    {
-      "activity": "Amoxliatl",
-      "variant": "Inventory",
-      "baselineDps": 9.5064,
-      "baselineStyle": "Jab",
-      "solverDps": 9.2432,
-      "solverWeapon": "Inquisitor's mace",
-      "solverStyle": "Pound",
-      "delta": -0.0277,
+      "baseline": {
+        "dps": 12.10271315105082,
+        "variant": "Ranged",
+        "style": "ranged",
+        "styleName": "Rapid",
+        "spell": "",
+        "warnings": []
+      },
+      "constrained": {
+        "dps": 12.2121,
+        "delta": 0.009,
+        "weapon": "Twisted bow",
+        "style": "ranged",
+        "styleName": "Rapid",
+        "spell": "",
+        "ammo": "Seeking dragon arrow",
+        "gear": {
+          "head": "Slayer helmet (i)",
+          "cape": "Dizana's quiver",
+          "neck": "Necklace of rupture",
+          "body": "Masori body (f)",
+          "legs": "Masori chaps (f)",
+          "hands": "Zaryte vambraces",
+          "feet": "Avernic treads (max)",
+          "ring": "Ultor ring"
+        },
+        "warnings": [],
+        "profile": "Rigour + Ranging"
+      },
+      "unconstrained": {
+        "dps": 25.1278,
+        "delta": 1.0762,
+        "weapon": "Ancient gorilla greegree",
+        "style": "crush",
+        "styleName": "Kick",
+        "spell": "",
+        "ammo": "",
+        "gear": {
+          "head": "Inquisitor's great helm",
+          "cape": "Infernal cape",
+          "neck": "Wilderness champion amulet",
+          "body": "Inquisitor's hauberk",
+          "shield": "Avernic defender",
+          "legs": "Inquisitor's plateskirt",
+          "hands": "Ferocious gloves",
+          "feet": "Avernic treads",
+          "ring": "Ultor ring"
+        },
+        "warnings": [],
+        "profile": "Piety + Super Combat"
+      },
       "isFinding": false,
-      "gear": {
-        "head": "Inquisitor's great helm",
-        "cape": "Infernal cape",
-        "neck": "Wilderness champion amulet",
-        "ammo": "Adamant arrow",
-        "body": "Inquisitor's hauberk",
-        "shield": "Avernic defender",
-        "legs": "Inquisitor's plateskirt",
-        "hands": "Barrows gloves (wrapped)",
-        "feet": "Avernic treads (max)",
-        "ring": "Ultor ring"
-      }
-    },
-    {
-      "activity": "Aquanite",
-      "variant": "Melee Slash/Stab",
-      "baselineDps": 6.6089,
-      "baselineStyle": "Lunge",
-      "solverDps": 8.1099,
-      "solverWeapon": "Ghrazi rapier",
-      "solverStyle": "Stab",
-      "delta": 0.2271,
-      "isFinding": true,
-      "gear": {
-        "head": "Sanguine torva full helm",
-        "cape": "Infernal cape",
-        "neck": "Wilderness champion amulet",
-        "ammo": "Adamant arrow",
-        "body": "Sanguine torva platebody",
-        "shield": "Avernic defender",
-        "legs": "Elite calamity breeches",
-        "hands": "Barrows gloves (wrapped)",
-        "feet": "Avernic treads (max)",
-        "ring": "Ultor ring"
-      }
-    },
-    {
-      "activity": "Araxxor",
-      "variant": "Melee",
-      "baselineDps": 7.4418,
-      "baselineStyle": "Jab",
-      "solverDps": 8.2552,
-      "solverWeapon": "Inquisitor's mace",
-      "solverStyle": "Pound",
-      "delta": 0.1093,
-      "isFinding": true,
-      "gear": {
-        "head": "Inquisitor's great helm",
-        "cape": "Infernal cape",
-        "neck": "Wilderness champion amulet",
-        "ammo": "Adamant arrow",
-        "body": "Inquisitor's hauberk",
-        "shield": "Avernic defender",
-        "legs": "Inquisitor's plateskirt",
-        "hands": "Barrows gloves (wrapped)",
-        "feet": "Avernic treads (max)",
-        "ring": "Ultor ring"
-      }
-    },
-    {
-      "activity": "Aviansie",
-      "variant": "Low Risk Melee",
-      "baselineDps": 4.7109,
-      "baselineStyle": "Swipe",
-      "solverDps": 7.0078,
-      "solverWeapon": "Noxious halberd",
-      "solverStyle": "Jab",
-      "delta": 0.4876,
-      "isFinding": true,
-      "gear": {
-        "head": "Maoma's great helm",
-        "cape": "Infernal cape",
-        "neck": "Wilderness champion amulet",
-        "ammo": "Adamant arrow",
-        "body": "Oathplate chest",
-        "legs": "Sanguine torva platelegs",
-        "hands": "Barrows gloves (wrapped)",
-        "feet": "Avernic treads (max)",
-        "ring": "Ultor ring"
-      }
-    },
-    {
-      "activity": "Basilisk Knight",
-      "variant": "Melee",
-      "baselineDps": 6.3342,
-      "baselineStyle": "Pummel",
-      "solverDps": 8.4692,
-      "solverWeapon": "Inquisitor's mace",
-      "solverStyle": "Pound",
-      "delta": 0.3371,
-      "isFinding": true,
-      "gear": {
-        "head": "Inquisitor's great helm",
-        "cape": "Infernal cape",
-        "neck": "Wilderness champion amulet",
-        "ammo": "Adamant arrow",
-        "body": "Inquisitor's hauberk",
-        "shield": "Avernic defender",
-        "legs": "Inquisitor's plateskirt",
-        "hands": "Barrows gloves (wrapped)",
-        "feet": "Avernic treads (max)",
-        "ring": "Ultor ring"
-      }
+      "styleSwitch": false
     }
   ]
 }
