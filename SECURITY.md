@@ -45,6 +45,14 @@ comfortable doing so.
 ## Branch protection settings
 
 `main` requires a pull request with the `checks` job passing, and blocks force
-pushes, branch deletion and non-linear history. Repository admins can currently
-bypass these; see the note in the pull request template of the sibling
-repository for how to tighten that.
+pushes, branch deletion and non-linear history.
+
+Repository admins can currently bypass these. That is deliberate: the owner is
+the only account with write access, and an escape hatch avoids a lockout if CI
+itself breaks. To require the same flow of everyone including admins:
+
+```bash
+gh api -X PUT repos/cha-ndler/osrs-meta-lab/branches/main/protection/enforce_admins
+```
+
+Reverse it with the same path and `-X DELETE`.
