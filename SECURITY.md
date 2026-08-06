@@ -41,3 +41,10 @@ pinned to an exact commit. This matters for more than reproducibility:
 Running the lab executes `npm install` in `oracle/` and a `yarn install` inside
 the submodule. Those pull real dependency trees — run them somewhere you are
 comfortable doing so.
+
+## Branch protection settings
+
+`main` requires a pull request with the `checks` job passing, and blocks force
+pushes, branch deletion and non-linear history. Repository admins can currently
+bypass these; see the note in the pull request template of the sibling
+repository for how to tighten that.
