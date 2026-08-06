@@ -9,6 +9,7 @@ Run: python lab/selfcheck.py
 
 from __future__ import annotations
 
+import ast
 import pathlib
 import re
 import subprocess
@@ -73,6 +74,33 @@ def main() -> int:
     engine = (ROOT / "lab" / "engine.py").read_text(encoding="utf-8")
     check("mode-restricted gear filter present",
           "EXCLUDED_NAME_MARKERS" in engine and "(perfected)" in engine)
+
+    # Barbarian Assault arrows carry 125 ranged strength against a dragon
+    # arrow's 60 and the calculator accepts them on every bow, so without this
+    # the ranged answer to every boss is minigame ammunition.
+    check("Barbarian Assault ammunition excluded",
+          "EXCLUDED_IDS" in engine and all(str(i) in engine for i in (22227, 22230)))
+
+    # Ranking is not invariant to prayers and potions - unprayed, the best melee
+    # weapon at Vorkath is the fang; under Piety it is the Dragon hunter lance.
+    # Losing the profile would silently answer a different question.
+    check("combat profile declared",
+          "COMBAT_PROFILES" in engine
+          and all(p in engine for p in ("PIETY", "RIGOUR", "AUGURY")))
+
+    # The whole point of scoring through the calculator is that mechanics the
+    # raw stats cannot express still count. Ranking weapons by a stat proxy
+    # reintroduces exactly the blindness the oracle exists to remove: the Scythe
+    # of vitur placed 37th on the old one and so was never scored at all.
+    #
+    # Checked by parsing rather than by searching for text, because the reason
+    # the proxy was removed is written out in the module docstring and a plain
+    # substring search finds its own explanation.
+    search_src = (ROOT / "lab" / "search.py").read_text(encoding="utf-8")
+    fn = next((n for n in ast.walk(ast.parse(search_src))
+               if isinstance(n, ast.FunctionDef) and n.name == "weapon_shortlist"), None)
+    calls = {getattr(c.func, "id", "") for c in ast.walk(fn) if isinstance(c, ast.Call)} if fn else set()
+    check("weapons ranked by the oracle, not a stat proxy", "call_oracle" in calls)
 
     if FAILURES:
         print(f"\n{len(FAILURES)} check(s) failed")
