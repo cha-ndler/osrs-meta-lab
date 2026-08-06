@@ -116,7 +116,7 @@ def best_ammo(data: Data, weapon: Item) -> int | None:
 
 
 def weapon_shortlist(data: Data, monster_name: str, style: str, keep: int = 12, *,
-                     inputs: dict | None = None,
+                     inputs: dict | None = None, version: str | None = None,
                      restrict: set[int] | None = None) -> list[Candidate]:
     """Score every weapon that can attack with `style`; return the best.
 
@@ -154,7 +154,8 @@ def weapon_shortlist(data: Data, monster_name: str, style: str, keep: int = 12, 
     if not batch:
         return []
 
-    scored = call_oracle(monster_name, batch, style=style, inputs=inputs)
+    scored = call_oracle(monster_name, batch, style=style, inputs=inputs,
+                         version=version)
     ranked: list[tuple[float, Item, int, str | None]] = []
     for r in scored:
         if r.get("error") or blocking(r) or not r.get("dps"):
@@ -188,7 +189,7 @@ def solve(data: Data, monster_name: str, style: str, *,
           candidates: list[Candidate] | None = None, passes: int = 2,
           slot_keep: int = 10, weapon_keep: int = 12,
           pool: dict[str, list[Item]] | None = None,
-          inputs: dict | None = None) -> list[Result]:
+          inputs: dict | None = None, version: str | None = None) -> list[Result]:
     """Best loadout per candidate weapon, ranked by DPS.
 
     `pool` constrains which items may be equipped, which is how a solve is held
@@ -196,8 +197,8 @@ def solve(data: Data, monster_name: str, style: str, *,
     unconstrained best-in-slot.
     """
     if candidates is None:
-        candidates = weapon_shortlist(data, monster_name, style,
-                                      keep=weapon_keep, inputs=inputs)
+        candidates = weapon_shortlist(data, monster_name, style, keep=weapon_keep,
+                                      inputs=inputs, version=version)
     if not candidates:
         return []
 
@@ -233,7 +234,8 @@ def solve(data: Data, monster_name: str, style: str, *,
             if not batch:
                 continue
 
-            scored = call_oracle(monster_name, batch, style=style, inputs=inputs)
+            scored = call_oracle(monster_name, batch, style=style, inputs=inputs,
+                                 version=version)
             best: dict[int, tuple[float, Item]] = {}
             for r in scored:
                 if r.get("error") or blocking(r):
@@ -249,7 +251,7 @@ def solve(data: Data, monster_name: str, style: str, *,
         monster_name,
         [_loadout(c.weapon, gear[c.weapon.id], c.style_index,
                   ammo[c.weapon.id], c.spell) for c in candidates],
-        style=style, inputs=inputs,
+        style=style, inputs=inputs, version=version,
     )
 
     results: list[Result] = []

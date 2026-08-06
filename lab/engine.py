@@ -354,6 +354,36 @@ class Data:
         """
         return self.meta["ammo"].get(str(weapon.id))
 
+    @cached_property
+    def activities(self) -> dict[str, list[dict]]:
+        """Activity -> the monsters it is actually fought against.
+
+        See lab/activities.json. An activity present with an empty list has been
+        looked at and has no DPS answer, which is different from one that is
+        missing because nobody got to it.
+        """
+        raw = json.loads((ROOT / "lab" / "activities.json").read_text(encoding="utf-8"))
+        self._reasons = {k: v for k, v in (raw.get("_reasons") or {}).items()
+                         if not k.startswith("_")}
+        return {k: v for k, v in raw.items() if not k.startswith("_")}
+
+    def skip_reason(self, activity: str) -> str | None:
+        """Why an activity has no targets, if that was a decision rather than a gap."""
+        self.activities  # noqa: B018 - populates _reasons
+        return self._reasons.get(activity)
+
+    def targets(self, activity: str) -> list[dict]:
+        """Every monster an activity should be solved against.
+
+        An activity naming a monster directly is its own target; everything else
+        comes from the mapping. Raids are several fights wearing one name and a
+        single answer for "the Chambers of Xeric" would be meaningless, so they
+        expand to one target per boss.
+        """
+        if activity in self.activities:
+            return self.activities[activity]
+        return [{"monster": activity}] if self.monster(activity) else []
+
     def monster(self, name: str) -> dict | None:
         matches = [m for m in self.monsters if m.get("name") == name]
         if not matches:

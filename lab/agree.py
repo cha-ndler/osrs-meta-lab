@@ -34,6 +34,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 
+import report  # noqa: E402
 from engine import (  # noqa: E402
     COMBAT_PROFILES, Data, blocking, call_oracle, describe_profile, warnings_in,
 )
@@ -89,7 +90,7 @@ def published_weapons(record: dict, data: Data) -> set[int]:
     return out
 
 
-def score_baseline(activity: str, record: dict, data: Data) -> dict | None:
+def score_baseline(target: dict, record: dict, data: Data) -> dict | None:
     """Best published setup, over every variant and every attack style.
 
     Scoring all of them and keeping the maximum is the fair comparison: a page's
@@ -123,7 +124,8 @@ def score_baseline(activity: str, record: dict, data: Data) -> dict | None:
     if not batch:
         return None
 
-    scored = call_oracle(activity, batch)
+    scored = call_oracle(target["monster"], batch, version=target.get("version"),
+                         inputs=target.get("inputs"))
     best = None
     for r in scored:
         if r.get("error") or blocking(r) or not r.get("dps"):
@@ -140,17 +142,22 @@ def score_baseline(activity: str, record: dict, data: Data) -> dict | None:
     }
 
 
-def best_solve(data: Data, activity: str, *, pool=None, restrict=None,
+def best_solve(data: Data, target: dict, *, pool=None, restrict=None,
                weapons: int = 8, slots: int = 5):
     """Highest-DPS loadout across every style, optionally pool-constrained."""
+    monster = target["monster"]
+    version = target.get("version")
+    inputs = target.get("inputs")
     best = None
     for style in STYLES:
-        candidates = weapon_shortlist(data, activity, style, keep=weapons,
-                                      restrict=restrict)
+        candidates = weapon_shortlist(data, monster, style, keep=weapons,
+                                      restrict=restrict, version=version,
+                                      inputs=inputs)
         if not candidates:
             continue
-        results = solve(data, activity, style, candidates=candidates,
-                        pool=pool, slot_keep=slots, passes=2)
+        results = solve(data, monster, style, candidates=candidates,
+                        pool=pool, slot_keep=slots, passes=2,
+                        version=version, inputs=inputs)
         if results and (best is None or results[0].dps > best[0].dps):
             best = (results[0], style)
     return best
@@ -183,65 +190,90 @@ def main() -> int:
     for path in paths:
         record = json.loads(path.read_text(encoding="utf-8"))
         activity = record["activity"]
-        if not data.monster(activity):
-            skipped.append(f"{activity} (no monster)")
-            continue
-
-        try:
-            base = score_baseline(activity, record, data)
-        except Exception as exc:
-            skipped.append(f"{activity} (oracle: {str(exc)[:60]})")
-            continue
-        if not base:
-            skipped.append(f"{activity} (no scorable setup)")
+        targets = data.targets(activity)
+        if not targets:
+            reason = data.skip_reason(activity) or "no monster"
+            skipped.append(f"{activity} ({reason})")
             continue
 
         pool = published_pool(record, data)
         restrict = published_weapons(record, data)
-        constrained = best_solve(data, activity, pool=pool, restrict=restrict,
-                                 weapons=args.weapons, slots=args.slots)
-        unconstrained = best_solve(data, activity, weapons=args.weapons,
-                                   slots=args.slots)
-        if not constrained or not unconstrained:
-            skipped.append(f"{activity} (no solve)")
-            continue
 
-        con, con_style = constrained
-        unc, unc_style = unconstrained
-        con_delta = (con.dps - base["dps"]) / base["dps"] if base["dps"] else 0
-        unc_delta = (unc.dps - base["dps"]) / base["dps"] if base["dps"] else 0
+        # A raid is several fights sharing one name, so it expands to one row
+        # per boss. The published setup is the same for all of them, which is
+        # itself worth seeing: a kit chosen for the whole raid will not be
+        # optimal at every stop inside it.
+        for target in targets:
+            label = target["monster"]
+            if label != activity:
+                label = f"{activity} / {label}"
 
-        rows.append({
-            "activity": activity,
-            "baseline": {k: base[k] for k in
-                         ("dps", "variant", "style", "styleName", "spell", "warnings")},
-            "constrained": {
-                "dps": round(con.dps, 4), "delta": round(con_delta, 4),
-                "weapon": con.weapon, "style": con_style,
-                "styleName": con.style_name, "spell": con.spell,
-                "ammo": con.ammo, "gear": con.gear, "warnings": con.warnings,
-                "profile": describe_profile(con_style),
-            },
-            "unconstrained": {
-                "dps": round(unc.dps, 4), "delta": round(unc_delta, 4),
-                "weapon": unc.weapon, "style": unc_style,
-                "styleName": unc.style_name, "spell": unc.spell,
-                "ammo": unc.ammo, "gear": unc.gear, "warnings": unc.warnings,
-                "profile": describe_profile(unc_style),
-            },
-            "isFinding": con_delta >= FINDING_THRESHOLD,
-            "styleSwitch": con_style != base["style"],
-        })
-        flag = "FINDING" if con_delta >= FINDING_THRESHOLD else "       "
-        print(f"  {flag} {activity:<28} base {base['dps']:6.3f} -> "
-              f"same-tier {con.dps:6.3f} ({con_delta:+6.1%})  "
-              f"ceiling {unc.dps:6.3f} ({unc_delta:+6.1%})  {con.weapon}")
+            try:
+                base = score_baseline(target, record, data)
+            except Exception as exc:
+                skipped.append(f"{label} (oracle: {str(exc)[:60]})")
+                continue
+            if not base:
+                skipped.append(f"{label} (no scorable setup)")
+                continue
 
+            constrained = best_solve(data, target, pool=pool, restrict=restrict,
+                                     weapons=args.weapons, slots=args.slots)
+            unconstrained = best_solve(data, target, weapons=args.weapons,
+                                       slots=args.slots)
+            if not constrained or not unconstrained:
+                skipped.append(f"{label} (no solve)")
+                continue
+
+            con, con_style = constrained
+            unc, unc_style = unconstrained
+            con_delta = (con.dps - base["dps"]) / base["dps"] if base["dps"] else 0
+            unc_delta = (unc.dps - base["dps"]) / base["dps"] if base["dps"] else 0
+            emit(rows, activity, target, label, base, con, con_style, unc,
+                 unc_style, con_delta, unc_delta)
+
+    return finish(rows, skipped, started)
+
+
+
+def emit(rows, activity, target, label, base, con, con_style, unc, unc_style,
+         con_delta, unc_delta) -> None:
+    rows.append({
+        "activity": activity,
+        "target": target["monster"],
+        "label": label,
+        "baseline": {k: base[k] for k in
+                     ("dps", "variant", "style", "styleName", "spell", "warnings")},
+        "constrained": {
+            "dps": round(con.dps, 4), "delta": round(con_delta, 4),
+            "weapon": con.weapon, "style": con_style,
+            "styleName": con.style_name, "spell": con.spell,
+            "ammo": con.ammo, "gear": con.gear, "warnings": con.warnings,
+            "profile": describe_profile(con_style),
+        },
+        "unconstrained": {
+            "dps": round(unc.dps, 4), "delta": round(unc_delta, 4),
+            "weapon": unc.weapon, "style": unc_style,
+            "styleName": unc.style_name, "spell": unc.spell,
+            "ammo": unc.ammo, "gear": unc.gear, "warnings": unc.warnings,
+            "profile": describe_profile(unc_style),
+        },
+        "isFinding": con_delta >= FINDING_THRESHOLD,
+        "styleSwitch": con_style != base["style"],
+    })
+    flag = "FINDING" if con_delta >= FINDING_THRESHOLD else "       "
+    print(f"  {flag} {label:<40} base {base['dps']:6.3f} -> "
+          f"same-tier {con.dps:6.3f} ({con_delta:+6.1%})  "
+          f"ceiling {unc.dps:6.3f} ({unc_delta:+6.1%})  {con.weapon}")
+
+
+def finish(rows: list[dict], skipped: list[str], started: float) -> int:
     con_deltas = [r["constrained"]["delta"] for r in rows]
     unc_deltas = [r["unconstrained"]["delta"] for r in rows]
     findings = [r for r in rows if r["isFinding"]]
     summary = {
         "checked": len(rows),
+        "activities": len({r["activity"] for r in rows}),
         "profiles": {s: describe_profile(s) for s in STYLES},
         "threshold": FINDING_THRESHOLD,
         "constrained": {
@@ -263,7 +295,23 @@ def main() -> int:
     (REPORTS / "agreement.json").write_text(
         json.dumps(summary, indent=2), encoding="utf-8")
 
-    print(f"\nchecked {len(rows)} activities in {summary['elapsedSeconds']}s")
+    # One file per finding. The JSON is the record; these are the part a person
+    # reads, and each one has to carry enough context to be argued with - what
+    # the published setup was, what the constrained pool allowed, and which
+    # prayers and potions the numbers assume.
+    findings_dir = REPORTS / "findings"
+    if findings_dir.exists():
+        for stale in findings_dir.glob("*.md"):
+            stale.unlink()
+    if findings:
+        findings_dir.mkdir(parents=True, exist_ok=True)
+        for row in findings:
+            (findings_dir / f"{report.slug(row['label'])}.md").write_text(
+                report.finding(row), encoding="utf-8")
+        print(f"wrote {len(findings)} finding(s) to {findings_dir.relative_to(ROOT)}")
+
+    print(f"\nchecked {len(rows)} targets across {summary['activities']} "
+          f"activities in {summary['elapsedSeconds']}s")
     if con_deltas:
         print(f"same-tier median vs published: {summary['constrained']['medianDelta']:+.2%}")
         print(f"unconstrained ceiling median:  {summary['unconstrained']['medianDelta']:+.2%}")

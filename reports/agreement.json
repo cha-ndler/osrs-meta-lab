@@ -1,5 +1,6 @@
 {
-  "checked": 3,
+  "checked": 1,
+  "activities": 1,
   "profiles": {
     "stab": "Piety + Super Combat",
     "slash": "Piety + Super Combat",
@@ -9,135 +10,23 @@
   },
   "threshold": 0.02,
   "constrained": {
-    "medianDelta": 0.0,
-    "meanDelta": 0.003,
-    "atOrBelowBaseline": 2
+    "medianDelta": 0.009,
+    "meanDelta": 0.009,
+    "atOrBelowBaseline": 0
   },
   "unconstrained": {
     "medianDelta": 1.0762,
-    "meanDelta": 1.0062
+    "meanDelta": 1.0762
   },
   "findings": 0,
   "styleSwitches": 0,
-  "skipped": [
-    "Abyss (no monster)"
-  ],
-  "elapsedSeconds": 72.8,
+  "skipped": [],
+  "elapsedSeconds": 22.0,
   "rows": [
     {
-      "activity": "Abyssal Sire",
-      "baseline": {
-        "dps": 9.901851426122606,
-        "variant": "Magic - Tumeken's Shadow",
-        "style": "magic",
-        "styleName": "Accurate",
-        "spell": "Dark Demonbane",
-        "warnings": []
-      },
-      "constrained": {
-        "dps": 9.9019,
-        "delta": 0.0,
-        "weapon": "Tumeken's shadow",
-        "style": "magic",
-        "styleName": "Accurate",
-        "spell": "",
-        "ammo": "",
-        "gear": {
-          "head": "Slayer helmet (i)",
-          "cape": "Imbued guthix cape",
-          "neck": "Occult necklace",
-          "body": "Ancestral robe top",
-          "legs": "Ancestral robe bottom",
-          "hands": "Confliction gauntlets",
-          "feet": "Avernic treads (max)",
-          "ring": "Magus ring"
-        },
-        "warnings": [],
-        "profile": "Augury + Saturated Heart"
-      },
-      "unconstrained": {
-        "dps": 22.2725,
-        "delta": 1.2493,
-        "weapon": "Ancient gorilla greegree",
-        "style": "crush",
-        "styleName": "Kick",
-        "spell": "",
-        "ammo": "",
-        "gear": {
-          "head": "Inquisitor's great helm",
-          "cape": "Infernal cape",
-          "neck": "Wilderness champion amulet",
-          "body": "Inquisitor's hauberk",
-          "shield": "Avernic defender",
-          "legs": "Inquisitor's plateskirt",
-          "hands": "Ferocious gloves",
-          "feet": "Avernic treads",
-          "ring": "Ultor ring"
-        },
-        "warnings": [],
-        "profile": "Piety + Super Combat"
-      },
-      "isFinding": false,
-      "styleSwitch": false
-    },
-    {
-      "activity": "Adamant dragon",
-      "baseline": {
-        "dps": 9.853223009306921,
-        "variant": "Magic - Tumeken's Shadow",
-        "style": "magic",
-        "styleName": "Accurate",
-        "spell": "Dark Demonbane",
-        "warnings": []
-      },
-      "constrained": {
-        "dps": 9.8532,
-        "delta": 0.0,
-        "weapon": "Tumeken's shadow",
-        "style": "magic",
-        "styleName": "Accurate",
-        "spell": "",
-        "ammo": "",
-        "gear": {
-          "head": "Slayer helmet (i)",
-          "cape": "Imbued saradomin cape",
-          "neck": "Occult necklace",
-          "body": "Ancestral robe top",
-          "legs": "Ancestral robe bottom",
-          "hands": "Confliction gauntlets",
-          "feet": "Avernic treads (max)",
-          "ring": "Magus ring"
-        },
-        "warnings": [],
-        "profile": "Augury + Saturated Heart"
-      },
-      "unconstrained": {
-        "dps": 16.6822,
-        "delta": 0.6931,
-        "weapon": "Ancient gorilla greegree",
-        "style": "crush",
-        "styleName": "Kick",
-        "spell": "",
-        "ammo": "",
-        "gear": {
-          "head": "Inquisitor's great helm",
-          "cape": "Infernal cape",
-          "neck": "Wilderness champion amulet",
-          "body": "Inquisitor's hauberk",
-          "shield": "Avernic defender",
-          "legs": "Inquisitor's plateskirt",
-          "hands": "Ferocious gloves",
-          "feet": "Avernic treads",
-          "ring": "Ultor ring"
-        },
-        "warnings": [],
-        "profile": "Piety + Super Combat"
-      },
-      "isFinding": false,
-      "styleSwitch": false
-    },
-    {
       "activity": "Alchemical Hydra",
+      "target": "Alchemical Hydra",
+      "label": "Alchemical Hydra",
       "baseline": {
         "dps": 12.10271315105082,
         "variant": "Ranged",
