@@ -1,0 +1,41 @@
+name: CI
+
+# Gives branch protection a real check to require. A full solve needs the
+# vendored calculator plus a yarn install, so this verifies the invariants that
+# can be checked cheaply and deterministically - the ones whose silent failure
+# would make every report wrong but still plausible-looking.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      # Pinned to commit SHAs rather than tags: a tag can be moved to point at
+      # new code by a compromised upstream account, a SHA cannot.
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+          # The calculator is 200MB and only a real solve needs its contents.
+          # selfcheck only reads the pinned commit from the tree entry.
+          submodules: false
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+
+      - name: Byte-compile the lab
+        run: python -m compileall -q lab
+
+      - name: Repository invariants
+        run: python lab/selfcheck.py

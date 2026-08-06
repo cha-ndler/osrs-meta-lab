@@ -1,0 +1,25 @@
+version: 2
+
+# Actions are pinned to commit SHAs so a moved tag cannot inject code, which
+# also means security fixes never arrive on their own. Dependabot opens a pull
+# request with the new SHA instead.
+#
+# The calculator submodule is deliberately absent here: it is pinned by commit
+# and bumping it changes every DPS number this repository produces, so it is
+# reviewed and moved by hand.
+updates:
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "ci"
+
+  - package-ecosystem: npm
+    directory: "/oracle"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "deps"

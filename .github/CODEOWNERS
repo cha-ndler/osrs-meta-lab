@@ -1,0 +1,9 @@
+# Every change requires review from the owner. Combined with branch protection
+# this means nothing reaches main without going through a pull request.
+* @cha-ndler
+
+# The vendored calculator determines every number this repository produces, and
+# the CI configuration decides what runs with write access.
+/vendor/ @cha-ndler
+/.github/ @cha-ndler
+/oracle/ @cha-ndler
