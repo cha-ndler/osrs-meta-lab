@@ -98,7 +98,8 @@ def published_weapons(record: dict, data: Data) -> set[int]:
     return out
 
 
-def score_baseline(target: dict, record: dict, data: Data) -> dict | None:
+def score_baseline(target: dict, record: dict,
+                   data: Data) -> tuple[dict | None, str | None]:
     """Best published setup, over every variant and every attack style.
 
     Scoring all of them and keeping the maximum is the fair comparison: a page's
@@ -130,7 +131,7 @@ def score_baseline(target: dict, record: dict, data: Data) -> dict | None:
                     batch.append(payload)
                     refs.append((variant, style, spell))
     if not batch:
-        return None
+        return None, "no published setup lists an equipped weapon"
 
     scored = call_oracle(target["monster"], batch, version=target.get("version"),
                          inputs=target.get("inputs"))
@@ -141,7 +142,13 @@ def score_baseline(target: dict, record: dict, data: Data) -> dict | None:
         if best is None or r["dps"] > best[0]["dps"]:
             best = (r, *refs[r["i"]])
     if best is None:
-        return None
+        # Every published setup scored nothing. That is usually an
+        # immunity rather than bad gear - Vespula cannot be hurt by melee,
+        # and every Chambers of Xeric setup equips a melee weapon - so say
+        # so, because "no scorable setup" reads like a missing page.
+        return None, (f"every published setup scored zero against "
+                      f"{target['monster']}; it is likely immune to the "
+                      f"styles they use")
     result, variant, style, spell = best
     return {
         "dps": result["dps"], "variant": variant["variant"], "style": style,
@@ -152,7 +159,7 @@ def score_baseline(target: dict, record: dict, data: Data) -> dict | None:
         "gear": {slot: data.by_id_unfiltered[i]
                  for slot, i in baseline_gear(variant, data).items()
                  if i in data.by_id_unfiltered},
-    }
+    }, None
 
 
 def best_solve(data: Data, target: dict, *, pool=None, restrict=None,
@@ -226,12 +233,12 @@ def main() -> int:
                 label = f"{activity} / {label}"
 
             try:
-                base = score_baseline(target, record, data)
+                base, why = score_baseline(target, record, data)
             except Exception as exc:
                 skipped.append(f"{label} (oracle: {str(exc)[:60]})")
                 continue
             if not base:
-                skipped.append(f"{label} (no scorable setup)")
+                skipped.append(f"{label} ({why})")
                 continue
 
             constrained = best_solve(data, target, pool=pool, restrict=restrict,
