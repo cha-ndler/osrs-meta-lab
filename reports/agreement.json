@@ -10,38 +10,38 @@
   },
   "threshold": 0.02,
   "constrained": {
-    "medianDelta": 0.0,
-    "meanDelta": 0.0,
-    "atOrBelowBaseline": 1
+    "medianDelta": 0.0569,
+    "meanDelta": 0.0569,
+    "atOrBelowBaseline": 0
   },
   "unconstrained": {
-    "medianDelta": 1.4293,
-    "meanDelta": 1.4293
+    "medianDelta": 1.9456,
+    "meanDelta": 1.9456
   },
-  "findings": 0,
+  "findings": 1,
   "singleTargetRows": 1,
-  "singleTargetMedianDelta": 0.0,
+  "singleTargetMedianDelta": 0.0569,
   "perBossRows": 0,
   "perBossAboveThreshold": 0,
   "styleSwitches": 0,
   "skipped": [],
-  "elapsedSeconds": 25.3,
+  "elapsedSeconds": 25.2,
   "rows": [
     {
-      "activity": "Scurrius",
-      "target": "Scurrius",
-      "label": "Scurrius",
+      "activity": "Sarachnis",
+      "target": "Sarachnis",
+      "label": "Sarachnis",
       "baseline": {
-        "dps": 12.819925111673678,
-        "variant": "Melee (high level)",
+        "dps": 10.115371797621966,
+        "variant": "Setup",
         "style": "slash",
         "styleName": "Chop",
         "spell": "",
         "warnings": []
       },
       "constrained": {
-        "dps": 12.8199,
-        "delta": 0.0,
+        "dps": 10.6913,
+        "delta": 0.0569,
         "weapon": "Scythe of vitur",
         "style": "slash",
         "styleName": "Chop",
@@ -50,9 +50,9 @@
         "gear": {
           "head": "Torva full helm",
           "cape": "Infernal cape",
-          "neck": "Amulet of rancour",
-          "body": "Torva platebody",
-          "legs": "Torva platelegs",
+          "neck": "Amulet of fury",
+          "body": "Blood moon chestplate",
+          "legs": "Blood moon tassets",
           "hands": "Ferocious gloves",
           "feet": "Avernic treads (max)",
           "ring": "Ultor ring"
@@ -61,8 +61,8 @@
         "profile": "Piety + Super Combat"
       },
       "unconstrained": {
-        "dps": 31.1432,
-        "delta": 1.4293,
+        "dps": 29.7958,
+        "delta": 1.9456,
         "weapon": "Ancient gorilla greegree",
         "style": "crush",
         "styleName": "Kick",
@@ -82,7 +82,7 @@
         "warnings": [],
         "profile": "Piety + Super Combat"
       },
-      "isFinding": false,
+      "isFinding": true,
       "perBoss": false,
       "styleSwitch": false
     }

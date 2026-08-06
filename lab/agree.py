@@ -139,11 +139,16 @@ def score_baseline(target: dict, record: dict, data: Data) -> dict | None:
         "dps": result["dps"], "variant": variant["variant"], "style": style,
         "styleName": result.get("styleName"), "spell": spell or "",
         "warnings": warnings_in(result),
+        # The winning variant's own gear, used to start the constrained
+        # ascent from the setup it is being measured against.
+        "gear": {slot: data.by_id[i]
+                 for slot, i in baseline_gear(variant, data).items()
+                 if i in data.by_id},
     }
 
 
 def best_solve(data: Data, target: dict, *, pool=None, restrict=None,
-               weapons: int = 8, slots: int = 5):
+               seed=None, weapons: int = 8, slots: int = 5):
     """Highest-DPS loadout across every style, optionally pool-constrained."""
     monster = target["monster"]
     version = target.get("version")
@@ -160,7 +165,7 @@ def best_solve(data: Data, target: dict, *, pool=None, restrict=None,
         if not candidates:
             continue
         results = solve(data, monster, style, candidates=candidates,
-                        pool=pool, slot_keep=slots, passes=2,
+                        pool=pool, seed=seed, slot_keep=slots, passes=2,
                         version=version, inputs=inputs)
         if results and (best is None or results[0].dps > best[0].dps):
             best = (results[0], style)
@@ -222,7 +227,8 @@ def main() -> int:
                 continue
 
             constrained = best_solve(data, target, pool=pool, restrict=restrict,
-                                     weapons=args.weapons, slots=args.slots)
+                                     seed=base["gear"], weapons=args.weapons,
+                                     slots=args.slots)
             unconstrained = best_solve(data, target, weapons=args.weapons,
                                        slots=args.slots)
             if not constrained or not unconstrained:

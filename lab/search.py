@@ -215,13 +215,22 @@ def weapon_shortlist(data: Data, monster_name: str, style: str, keep: int = 12, 
 def solve(data: Data, monster_name: str, style: str, *,
           candidates: list[Candidate] | None = None, passes: int = 2,
           slot_keep: int = 10, weapon_keep: int = 12,
-          pool: dict[str, list[Item]] | None = None,
+          pool: dict[str, list[Item]] | None = None, seed: dict[str, Item] | None = None,
           inputs: dict | None = None, version: str | None = None) -> list[Result]:
     """Best loadout per candidate weapon, ranked by DPS.
 
     `pool` constrains which items may be equipped, which is how a solve is held
     to the same gear tier as a published setup. Left unset, the search runs
     unconstrained best-in-slot.
+
+    `seed` starts the ascent from a known loadout instead of from nothing.
+    Coordinate ascent only ever accepts a swap that improves on where it
+    already is, so starting from the setup being compared against makes
+    "at least as good as that setup" structural rather than something to hope
+    for. It matters because the ascent is greedy and set effects are not:
+    three pieces of crystal armour beat three individually stronger pieces, but
+    no single swap gets there from an empty slot, so the search would settle
+    just short and report the published setup as better than its own optimum.
     """
     if candidates is None:
         candidates = weapon_shortlist(data, monster_name, style, keep=weapon_keep,
@@ -248,7 +257,10 @@ def solve(data: Data, monster_name: str, style: str, *,
     # Every weapon advances through the same slot at the same time, so one
     # oracle call covers the whole fleet. Scoring per weapon instead would spawn
     # hundreds of Node processes per monster and startup would dominate.
-    gear: dict[int, dict[str, Item]] = {c.weapon.id: {} for c in candidates}
+    start = dict(seed) if seed else {}
+    start.pop("weapon", None)
+    start.pop("ammo", None)          # weapon-specific; chosen by best_ammo
+    gear: dict[int, dict[str, Item]] = {c.weapon.id: dict(start) for c in candidates}
 
     for _ in range(passes):
         for slot in GEAR_SLOTS:
