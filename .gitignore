@@ -1,8 +1,12 @@
-# Wiki dumps - regenerated on demand
+# Wiki dumps and generated caches - rebuilt on demand
 cache/
 
 # Shallow clone of the public library, used as a comparison baseline
 baseline/
+
+# Node dependencies (the submodule brings its own)
+node_modules/
+oracle/node_modules/
 
 __pycache__/
 *.pyc

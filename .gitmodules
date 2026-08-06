@@ -1,0 +1,3 @@
+[submodule "vendor/osrs-dps-calc"]
+	path = vendor/osrs-dps-calc
+	url = https://github.com/weirdgloop/osrs-dps-calc.git

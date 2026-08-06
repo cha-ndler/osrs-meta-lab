@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "es2020",
+    "lib": ["esnext", "dom"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "noEmit": true,
+    "baseUrl": "..",
+    "paths": {
+      "@/public/*": ["oracle/stubs/asset.ts"],
+      "*.png": ["oracle/stubs/asset.ts"],
+      "*.svg": ["oracle/stubs/asset.ts"],
+      "*.css": ["oracle/stubs/asset.ts"],
+      "@/*": ["vendor/osrs-dps-calc/src/*"]
+    }
+  },
+  "include": ["oracle.ts"]
+}

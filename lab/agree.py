@@ -1,158 +1,183 @@
-"""The trust gate.
+"""The trust gate, measured in DPS.
 
-Before any novel suggestion is worth reading, the solver has to reproduce metas
-the community already agrees on. This measures that.
+The old version compared attack *styles* and reported 73.7%, which was
+meaningless: eight of its ten disagreements were the Scythe of vitur, chosen at
+Araxxor for its multi-hit rather than for matching a defence hole.
 
-The clearest testable signal is **attack style**. Araxxor's defences are
-stab 160 / slash 75 / crush 15, which is exactly why the wiki recommends crush
-weapons. If the solver independently picks crush from the raw numbers, its
-reasoning is sound. If it does not, nothing else it says can be trusted.
+This compares what actually matters. For each activity the wiki publishes a
+setup; that setup and the solver's best are scored through the *same* oracle,
+and the delta is reported.
 
-Run: python lab/agree.py
+The healthy result is that most published setups sit at or near the optimum.
+That is what earns the right to believe the outliers. A solver that beats
+consensus everywhere is broken, not brilliant.
+
+Run: python lab/agree.py [--limit N] [--style crush]
 """
 
 from __future__ import annotations
 
+import argparse
 import json
+import statistics
 import sys
+import time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 
-from combat import Player  # noqa: E402
-from solve import STYLE_ATTACK, Solver, target_from_monster  # noqa: E402
-from stats import Stats, num  # noqa: E402
+from engine import Data, call_oracle  # noqa: E402
+from search import solve, weapon_shortlist  # noqa: E402
 
-BASELINE = Path(__file__).parent.parent / "baseline" / "data"
+ROOT = Path(__file__).parent.parent
+BASELINE = ROOT / "baseline" / "data"
+REPORTS = ROOT / "reports"
+
+# A finding must clear this margin to be worth your attention.
+FINDING_THRESHOLD = 0.02
 
 MELEE_STYLES = ("stab", "slash", "crush")
 
 
-def weapon_style(stats: Stats, weapon_name: str) -> str | None:
-    """Which melee style a weapon is actually best at."""
-    row = stats.item(weapon_name)
-    if not row:
-        return None
-    best, best_value = None, 0.0
-    for style in MELEE_STYLES:
-        value = num(row.get(STYLE_ATTACK[style]))
-        if value > best_value:
-            best, best_value = style, value
-    return best
-
-
-def solver_style(target) -> str:
-    """Whichever melee style the monster defends worst against."""
-    return min(MELEE_STYLES, key=lambda s: target.defence_bonus.get(s, 0))
-
-
-def style_is_determined(target) -> bool:
-    """False when every melee defence is equal.
-
-    Aviansie sit at 0/0/0 and Brutus at -7/-7/-7. Nothing about the monster
-    favours a style there, so counting it as agreement or disagreement is
-    meaningless - the weapon's own bonus decides, not the target.
-    """
-    values = {target.defence_bonus.get(s, 0) for s in MELEE_STYLES}
-    return len(values) > 1
-
-
-def weapon_styles(stats: Stats, weapon_name: str) -> set[str]:
-    """Every melee style a weapon can realistically be set to.
-
-    A scythe has slash 125 and crush 30 and is genuinely used in *either* mode
-    depending on the target - the wiki tells Araxxor players to set it to crush.
-    Treating its single highest bonus as "the" style manufactures disagreements
-    that do not exist.
-    """
-    row = stats.item(weapon_name)
-    if not row:
-        return set()
-    bonuses = {s: num(row.get(STYLE_ATTACK[s])) for s in MELEE_STYLES}
-    best = max(bonuses.values())
-    if best <= 0:
-        return set()
-    # Any style within 60% of the weapon's best is a usable mode.
-    return {s for s, v in bonuses.items() if v >= best * 0.6 and v > 0}
+def baseline_gear(variant: dict, data: Data) -> dict[str, int]:
+    """Map the public library's item ids onto calculator slots."""
+    mapping = {
+        "head": "head", "cape": "cape", "neck": "neck", "ammo": "ammo",
+        "weapon": "weapon", "torso": "body", "shield": "shield",
+        "legs": "legs", "gloves": "hands", "boots": "feet", "ring": "ring",
+    }
+    out: dict[str, int] = {}
+    for ours, theirs in mapping.items():
+        item_id = variant.get("equipment", {}).get(ours)
+        if item_id and item_id in data.by_id:
+            out[theirs] = item_id
+    return out
 
 
 def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--limit", type=int, default=0, help="only the first N activities")
+    ap.add_argument("--weapons", type=int, default=14)
+    ap.add_argument("--slots", type=int, default=6)
+    args = ap.parse_args()
+
     if not BASELINE.exists():
-        print(f"baseline data not found at {BASELINE}", file=sys.stderr)
-        print("clone the public library into baseline/ first", file=sys.stderr)
+        print(f"baseline missing at {BASELINE}", file=sys.stderr)
         return 2
 
-    stats = Stats()
-    solver = Solver(stats, Player())
+    data = Data()
+    rows: list[dict] = []
+    skipped_no_monster: list[str] = []
+    skipped_no_melee: list[str] = []
+    started = time.time()
 
-    checked = agreed = 0
-    missing_monster = 0
-    undetermined = 0
-    rows = []
+    paths = sorted(BASELINE.glob("*.json"))
+    if args.limit:
+        paths = paths[: args.limit]
 
-    for path in sorted(BASELINE.glob("*.json")):
+    for path in paths:
         record = json.loads(path.read_text(encoding="utf-8"))
         activity = record["activity"]
-        monster = stats.monster(activity)
+        monster = data.monster(activity)
         if not monster:
-            missing_monster += 1
+            skipped_no_monster.append(activity)
             continue
-        target = target_from_monster(monster)
 
-        # Only melee variants carry a testable style signal.
-        for variant in record["variants"]:
-            weapon_id = variant["equipment"].get("weapon")
-            if not weapon_id:
+        # Melee only. A magic loadout scores near zero without a spell selected
+        # and a ranged one needs ammo, so comparing either against a melee solve
+        # is apples to oranges - Adamant dragon's magic variant scored 0.15 dps
+        # and produced a nonsense "+2961%" finding. Those styles need their own
+        # handling before they can be judged.
+        variants = []
+        for v in record["variants"]:
+            weapon_id = v.get("equipment", {}).get("weapon")
+            item = data.by_id.get(weapon_id) if weapon_id else None
+            if not item:
                 continue
-            name = stats.page_for_id(weapon_id)
-            if not name:
+            melee = max(item.offence("stab"), item.offence("slash"), item.offence("crush"))
+            other = max(item.offence("ranged"), item.offence("magic"))
+            if melee > 0 and melee >= other:
+                variants.append(v)
+        if not variants:
+            skipped_no_melee.append(activity)
+            continue
+        # Score *every* melee variant in every attack style and keep the best.
+        # Pages publish budget and mid-tier setups alongside the maxed one, so
+        # picking a single variant compares unconstrained best-in-slot against
+        # someone's starter gear and manufactures a 20% "finding" every time.
+        batch, refs = [], []
+        for v in variants:
+            gear_v = baseline_gear(v, data)
+            if "weapon" not in gear_v:
                 continue
-            styles = weapon_styles(stats, name)
-            if not styles:
-                continue
-            if not style_is_determined(target):
-                undetermined += 1
-                break
-            expected = solver_style(target)
-            checked += 1
-            # The wiki's weapon agrees if it can be *set* to the style the
-            # numbers favour, which is how players actually use it.
-            match = expected in styles
-            agreed += match
-            rows.append({
-                "activity": activity,
-                "variant": variant["variant"],
-                "weapon": name,
-                "weaponStyles": sorted(styles),
-                "solverStyle": expected,
-                "agree": match,
-                "defences": {s: target.defence_bonus.get(s, 0) for s in MELEE_STYLES},
-            })
-            break  # one melee sample per activity is enough
+            for i in range(5):
+                batch.append({"gear": gear_v, "styleIndex": i})
+                refs.append(v)
+        if not batch:
+            continue
 
-    rate = agreed / checked if checked else 0
-    out = {
-        "checked": checked,
-        "agreed": agreed,
-        "agreementRate": round(rate, 4),
-        "activitiesWithoutMonsterData": missing_monster,
-        "styleUndetermined": undetermined,
+        try:
+            scored = call_oracle(activity, batch)
+        except Exception as exc:  # oracle refused this monster/loadout
+            skipped_no_monster.append(f"{activity} (oracle: {str(exc)[:60]})")
+            continue
+        usable = [s for s in scored if not s.get("error") and s.get("dps")]
+        if not usable:
+            continue
+        base = max(usable, key=lambda s: s["dps"])
+        variant = refs[base["i"]]
+
+        style = (base.get("styleType") or "slash").lower()
+        if style not in MELEE_STYLES:
+            style = "slash"
+
+        best = solve(data, activity, style,
+                     weapon_keep=args.weapons, slot_keep=args.slots, passes=1)
+        if not best:
+            continue
+        top = best[0]
+        delta = (top.dps - base["dps"]) / base["dps"] if base["dps"] else 0
+
+        rows.append({
+            "activity": activity,
+            "variant": variant["variant"],
+            "baselineDps": round(base["dps"], 4),
+            "baselineStyle": base.get("styleName"),
+            "solverDps": round(top.dps, 4),
+            "solverWeapon": top.weapon,
+            "solverStyle": top.style_name,
+            "delta": round(delta, 4),
+            "isFinding": delta >= FINDING_THRESHOLD,
+            "gear": top.gear,
+        })
+        flag = "FINDING" if delta >= FINDING_THRESHOLD else "       "
+        print(f"  {flag} {activity:<30} base {base['dps']:6.3f} -> "
+              f"best {top.dps:6.3f} ({delta:+.1%})  {top.weapon}")
+
+    deltas = [r["delta"] for r in rows]
+    findings = [r for r in rows if r["isFinding"]]
+    summary = {
+        "checked": len(rows),
+        "medianDelta": round(statistics.median(deltas), 4) if deltas else None,
+        "meanDelta": round(statistics.fmean(deltas), 4) if deltas else None,
+        "atOrBelowBaseline": len([d for d in deltas if d <= 0]),
+        "findings": len(findings),
+        "threshold": FINDING_THRESHOLD,
+        "skippedNoMonster": skipped_no_monster,
+        "skippedNoMeleeVariant": skipped_no_melee,
+        "elapsedSeconds": round(time.time() - started, 1),
         "rows": rows,
     }
-    report = Path(__file__).parent.parent / "reports" / "agreement.json"
-    report.parent.mkdir(parents=True, exist_ok=True)
-    report.write_text(json.dumps(out, indent=2), encoding="utf-8")
+    REPORTS.mkdir(parents=True, exist_ok=True)
+    (REPORTS / "agreement.json").write_text(
+        json.dumps(summary, indent=2), encoding="utf-8")
 
-    print(f"style agreement: {agreed}/{checked} ({rate:.1%})")
-    print(f"activities without monster stats: {missing_monster}")
-    print(f"style undetermined (equal defences): {undetermined}")
-    for r in rows:
-        if r["agree"]:
-            continue
-        print(f"  DIFF {r['activity']:<26} weapon={r['weapon'][:22]:<22} "
-              f"can be {'/'.join(r['weaponStyles']):<12} solver={r['solverStyle']:<6} "
-              f"def={r['defences']}")
-    print(f"\nwrote {report}")
+    print(f"\nchecked {len(rows)} activities in {summary['elapsedSeconds']}s")
+    print(f"median delta vs published setup: {summary['medianDelta']:+.2%}"
+          if summary["medianDelta"] is not None else "no data")
+    print(f"solver at or below baseline: {summary['atOrBelowBaseline']}/{len(rows)}")
+    print(f"candidate findings (>= {FINDING_THRESHOLD:.0%}): {len(findings)}")
+    print(f"activities with no monster match: {len(skipped_no_monster)}")
     return 0
 
 

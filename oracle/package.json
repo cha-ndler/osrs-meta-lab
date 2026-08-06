@@ -1,0 +1,12 @@
+{
+  "name": "osrs-meta-lab-oracle",
+  "private": true,
+  "type": "module",
+  "description": "Batched headless bridge to the OSRS Wiki DPS calculator (vendored via submodule).",
+  "scripts": {
+    "oracle": "tsx --tsconfig ./tsconfig.json ./oracle.ts"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.2"
+  }
+}
