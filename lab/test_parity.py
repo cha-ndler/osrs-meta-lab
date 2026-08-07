@@ -83,6 +83,14 @@ def main() -> int:
     check("Barbarian Assault arrows excluded from equipment",
           [i for i in data.equipment if i.id in (22227, 22228, 22229, 22230)], [])
 
+    # A greegree has no attack speed, so the calculator resolves it to a
+    # one-tick attack and it beat the Scythe of vitur by 70% with no offensive
+    # or strength bonus at all. Every weapon in the pool must be swingable.
+    check("no weapon has an unusable attack speed",
+          [i.name for i in data.equipment if i.slot == "weapon" and i.speed <= 0], [])
+    check("greegrees are not weapons",
+          [i.name for i in data.equipment if "greegree" in i.name.lower()], [])
+
     if FAILURES:
         print(f"\n{len(FAILURES)} parity check(s) failed")
         return 1

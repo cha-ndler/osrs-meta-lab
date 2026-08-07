@@ -11,8 +11,8 @@ Solved under **Piety + Super Combat**.
 The comparison is restricted to equipment the published setups already
 use, so this is the same gear arranged differently rather than a richer
 player beating a budget guide. For reference, unconstrained
-best-in-slot from the whole game reaches 31.736 dps
-(+198.3%), which is the tier gap and is *not* the finding.
+best-in-slot from the whole game reaches 15.672 dps
+(+47.3%), which is the tier gap and is *not* the finding.
 
 ## Loadout
 

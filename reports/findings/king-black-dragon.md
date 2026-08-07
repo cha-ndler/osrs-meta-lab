@@ -11,8 +11,8 @@ Solved under **Rigour + Ranging**.
 The comparison is restricted to equipment the published setups already
 use, so this is the same gear arranged differently rather than a richer
 player beating a budget guide. For reference, unconstrained
-best-in-slot from the whole game reaches 18.210 dps
-(+83.3%), which is the tier gap and is *not* the finding.
+best-in-slot from the whole game reaches 11.455 dps
+(+15.3%), which is the tier gap and is *not* the finding.
 
 ## Loadout
 
