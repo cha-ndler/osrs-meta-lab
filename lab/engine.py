@@ -140,6 +140,24 @@ EXCLUDED_IDS = frozenset({
 })
 
 
+def is_usable_weapon(slot: str, speed) -> bool:
+    """Whether a weapon-slot item can be swung at all.
+
+    The data gives 51 weapon-slot items an attack speed of -1 or 0: greegrees,
+    a Christmas dinner, crates of fish, the blasters. They are held in the
+    weapon slot but are not weapons, and the calculator resolves the missing
+    speed to a one-tick attack - so a greegree, with no offensive or strength
+    bonus whatsoever, out-damaged the Scythe of vitur by 70% and won the
+    unconstrained search at 115 of 133 targets.
+
+    Excluding them is lossless: not one of the 51 carries any offensive or
+    strength bonus, so nothing that could ever have been the answer is removed.
+    """
+    if slot != "weapon":
+        return True
+    return (speed or 0) > 0
+
+
 def is_standard_item(name: str, item_id: int = -1) -> bool:
     if item_id in EXCLUDED_IDS:
         return False
@@ -181,6 +199,8 @@ class Data:
         out = []
         for e in raw:
             if not is_standard_item(e.get("name", ""), e.get("id", -1)):
+                continue
+            if not is_usable_weapon((e.get("slot") or "").lower(), e.get("speed")):
                 continue
             out.append(Item(
                 id=e.get("id", -1),
@@ -225,6 +245,11 @@ class Data:
         """
         out: dict[int, Item] = {}
         for e in json.loads((CDN / "equipment.json").read_text(encoding="utf-8")):
+            # Unfiltered means "ignore where the item can be obtained", not
+            # "ignore whether it can be modelled". An item with no attack speed
+            # scores nonsense no matter who published it.
+            if not is_usable_weapon((e.get("slot") or "").lower(), e.get("speed")):
+                continue
             item = Item(
                 id=e.get("id", -1),
                 name=e.get("name", ""),

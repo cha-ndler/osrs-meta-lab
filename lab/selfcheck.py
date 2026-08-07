@@ -81,6 +81,11 @@ def main() -> int:
     check("Barbarian Assault ammunition excluded",
           "EXCLUDED_IDS" in engine and all(str(i) in engine for i in (22227, 22230)))
 
+    # 51 weapon-slot items have no attack speed, and the calculator resolves
+    # that to a one-tick attack. A greegree with no bonuses at all then beats
+    # the Scythe of vitur and wins the unconstrained search almost everywhere.
+    check("weapons without an attack speed excluded", "is_usable_weapon" in engine)
+
     # Ranking is not invariant to prayers and potions - unprayed, the best melee
     # weapon at Vorkath is the fang; under Piety it is the Dragon hunter lance.
     # Losing the profile would silently answer a different question.
