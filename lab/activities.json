@@ -1,0 +1,183 @@
+{
+  "_comment": [
+    "Activity -> the monsters it is actually fought against.",
+    "",
+    "The baseline library is organised by activity, and 34 of its 99 entries are",
+    "encounters rather than single monsters, so a name lookup misses them. They",
+    "are also the most interesting content in the game: every raid, the Inferno,",
+    "the Colosseum, Barrows, the Gauntlet. The calculator already carries stats",
+    "for essentially all of the individual bosses, so nothing here needs new data",
+    "- only the mapping that says which ones an activity means.",
+    "",
+    "Entries with an empty target list are recorded deliberately, not left out.",
+    "A skilling activity has no DPS answer, and saying so here is what stops it",
+    "looking like an oversight later.",
+    "",
+    "`inputs` overrides the encounter settings the calculator otherwise defaults:",
+    "party size, Challenge Mode, invocation level, defence reductions."
+  ],
+
+  "Chambers of Xeric": [
+    { "monster": "Great Olm" },
+    { "monster": "Tekton" },
+    { "monster": "Vasa Nistirio" },
+    { "monster": "Muttadile" },
+    { "monster": "Vespula" },
+    { "monster": "Skeletal Mystic" },
+    { "monster": "Lizardman shaman", "version": "Chambers of Xeric" }
+  ],
+
+  "Chambers of Xeric/Challenge Mode": [
+    { "monster": "Great Olm", "inputs": { "isFromCoxCm": true } },
+    { "monster": "Tekton", "inputs": { "isFromCoxCm": true } },
+    { "monster": "Vasa Nistirio", "inputs": { "isFromCoxCm": true } },
+    { "monster": "Muttadile", "inputs": { "isFromCoxCm": true } },
+    { "monster": "Vespula", "inputs": { "isFromCoxCm": true } }
+  ],
+
+  "Theatre of Blood": [
+    { "monster": "The Maiden of Sugadinti" },
+    { "monster": "Pestilent Bloat" },
+    { "monster": "Nylocas Vasilias" },
+    { "monster": "Sotetseg" },
+    { "monster": "Xarpus" },
+    { "monster": "Verzik Vitur" }
+  ],
+
+  "Tombs of Amascut": [
+    { "monster": "Akkha", "inputs": { "toaInvocationLevel": 300 } },
+    { "monster": "Ba-Ba", "inputs": { "toaInvocationLevel": 300 } },
+    { "monster": "Kephri", "inputs": { "toaInvocationLevel": 300 } },
+    { "monster": "Zebak", "inputs": { "toaInvocationLevel": 300 } },
+    { "monster": "Tumeken's Warden", "inputs": { "toaInvocationLevel": 300 } },
+    { "monster": "Elidinis' Warden", "inputs": { "toaInvocationLevel": 300 } }
+  ],
+
+  "Inferno": [
+    { "monster": "TzKal-Zuk" },
+    { "monster": "JalTok-Jad" },
+    { "monster": "Jal-Zek" },
+    { "monster": "Jal-Xil" },
+    { "monster": "Jal-ImKot" }
+  ],
+
+  "Fortis Colosseum": [
+    { "monster": "Sol Heredit" },
+    { "monster": "Manticore" },
+    { "monster": "Minotaur", "version": "Fortis Colosseum" },
+    { "monster": "Serpent shaman" },
+    { "monster": "Javelin Colossus" }
+  ],
+
+  "The Gauntlet": [
+    { "monster": "Crystalline Hunllef" },
+    { "monster": "Corrupted Hunllef" }
+  ],
+
+  "Moons of Peril": [
+    { "monster": "Blue Moon" },
+    { "monster": "Blood Moon" },
+    { "monster": "Eclipse Moon" }
+  ],
+
+  "Royal Titans": [
+    { "monster": "Branda the Fire Queen" },
+    { "monster": "Eldric the Ice King" }
+  ],
+
+  "Grotesque Guardians": [
+    { "monster": "Dusk" },
+    { "monster": "Dawn" }
+  ],
+
+  "Dagannoth Kings": [
+    { "monster": "Dagannoth Rex" },
+    { "monster": "Dagannoth Prime" },
+    { "monster": "Dagannoth Supreme" }
+  ],
+
+  "Barrows": [
+    { "monster": "Ahrim the Blighted" },
+    { "monster": "Dharok the Wretched" },
+    { "monster": "Guthan the Infested" },
+    { "monster": "Karil the Tainted" },
+    { "monster": "Torag the Corrupted" },
+    { "monster": "Verac the Defiled" }
+  ],
+
+  "Metal dragons": [
+    { "monster": "Bronze dragon" },
+    { "monster": "Iron dragon" },
+    { "monster": "Steel dragon" },
+    { "monster": "Mithril dragon" },
+    { "monster": "Adamant dragon" },
+    { "monster": "Rune dragon" }
+  ],
+
+  "Fossil Island Wyverns": [
+    { "monster": "Ancient Wyvern" },
+    { "monster": "Long-tailed Wyvern" },
+    { "monster": "Spitting Wyvern" },
+    { "monster": "Taloned Wyvern" }
+  ],
+
+  "Revenants": [
+    { "monster": "Revenant dragon" },
+    { "monster": "Revenant demon" },
+    { "monster": "Revenant dark beast" },
+    { "monster": "Revenant knight" }
+  ],
+
+  "TzHaar Fight Cave": [
+    { "monster": "TzTok-Jad" }
+  ],
+
+  "Barbarian Assault": [
+    { "monster": "Penance Fighter" },
+    { "monster": "Penance Ranger" },
+    { "monster": "Penance Queen" }
+  ],
+
+  "Abyss": [],
+  "Zalcano": [],
+  "Hespori (Echo)": [],
+  "Nightmare Zone": [],
+  "Chest (Rogues' Castle)": [],
+  "Ecumenical key": [],
+  "Fishing Trawler": [],
+  "Gout tuber": [],
+  "Guardians of the Rift": [],
+  "Hallowed Sepulchre": [],
+  "Hunters' Rumours": [],
+  "Krystilia": [],
+  "Rocky": [],
+  "Sulliuscep": [],
+  "Tempoross": [],
+  "Treasure Trails": [],
+  "Vale Totems": [],
+  "Wintertodt": [],
+
+  "_reasons": {
+    "_comment": "Why an activity above has no targets. 'no-dps-answer' and 'absent-upstream' are different facts and are worth keeping apart: the first is settled, the second changes when the calculator's data does.",
+
+    "Abyss": "no-dps-answer: the published setups are runecrafting kits built around a pickaxe, so a DPS comparison against the abyssal guardians measures nothing. Solving it anyway produced the first false finding this gate ever emitted - an Infernal pickaxe, +16.4%.",
+    "Zalcano": "no-dps-answer: killed by mining and throwing rocks rather than by attacking, and every published setup is a pickaxe. The calculator has stats for it, which is exactly why this has to be stated rather than left to the name lookup.",
+    "Chest (Rogues' Castle)": "no-dps-answer: a loot container, not a fight",
+    "Ecumenical key": "no-dps-answer: an item, not a fight",
+    "Fishing Trawler": "no-dps-answer: skilling minigame",
+    "Gout tuber": "no-dps-answer: a farming item",
+    "Guardians of the Rift": "no-dps-answer: skilling minigame",
+    "Hallowed Sepulchre": "no-dps-answer: an agility course; nothing is killed",
+    "Hunters' Rumours": "no-dps-answer: a hunter task list",
+    "Krystilia": "no-dps-answer: a slayer master, not a target",
+    "Rocky": "no-dps-answer: a skilling pet",
+    "Sulliuscep": "no-dps-answer: a woodcutting resource",
+    "Tempoross": "no-dps-answer: a fishing encounter scored on damage-to-boat, not DPS",
+    "Treasure Trails": "no-dps-answer: clue scrolls; the combat is incidental",
+    "Vale Totems": "no-dps-answer: a woodcutting minigame",
+    "Wintertodt": "no-dps-answer: a firemaking encounter; hits are not weapon attacks",
+
+    "Hespori (Echo)": "absent-upstream: the Echo variant has its own stats and the calculator carries only the standard Hespori. Mapping it to that one would report a fight nobody had.",
+    "Nightmare Zone": "absent-upstream: a configurable roster of ~30 boss variants rather than one encounter. Solvable once the mapping says which bosses a given dream contains."
+  }
+}
