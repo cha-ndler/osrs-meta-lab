@@ -125,6 +125,14 @@ finding this gate ever emitted: an Infernal pickaxe, +16.4%.
 - **No cost or obtainability.** Raw DPS ignores that a set costs 1.2b.
 - **No fight mechanics.** Phases, movement, downtime and supply use are not
   modelled. A loadout that wins on paper can lose on a real kill.
+- **Items that cannot be swung are not weapons.** Fifty-one weapon-slot items
+  carry an attack speed of -1 or 0 - greegrees, a Christmas dinner, crates of
+  fish - and the calculator resolves the missing speed to a one-tick attack. A
+  greegree with no offensive or strength bonus at all then beat the Scythe of
+  vitur by 70% and won the unconstrained search at 115 of 133 targets, which is
+  where the ceiling median of +176% came from. It is +43% now. The same-tier
+  column never moved: no wiki page publishes a greegree, so no constrained
+  solve could reach one.
 - **Mode-restricted gear is filtered out of the *search*.** Last Man Standing,
   Deadman and Bounty Hunter items carry huge stats with no acquisition cost
   inside their own mode. Unfiltered, "Corrupted halberd (perfected)" wins nearly
